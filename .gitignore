@@ -1,0 +1,58 @@
+# === 1. Foundry & Solidity (解决 80% 的体积问题) ===
+# 屏蔽合约编译产物、缓存和广播记录
+contracts/out/
+contracts/cache/
+contracts/broadcast/
+
+# 仅保留必要的测试框架，屏蔽巨大的第三方合约全量库
+# 注意：这要求后续在其他机器上运行 forge install 还原
+contracts/lib/openzeppelin-contracts/
+!contracts/lib/forge-std/
+
+
+# === 2. Go Backend ===
+# 屏蔽编译后的二进制文件
+backend/main
+backend/B2B_Payment_System
+# 屏蔽依赖缓存
+backend/vendor/
+backend/pkg/
+
+
+# === 3. Frontend (Next.js & Node.js) ===
+# 屏蔽极其臃肿的 node_modules
+**/node_modules/
+# 屏蔽 Next.js 编译输出
+frontend/.next/
+frontend/out/
+# 屏蔽日志文件
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+
+# === 4. Security & Environment (答辩重点：保护私钥) ===
+# 严禁将包含以太坊私钥、数据库密码的文件传至 GitHub
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+
+# === 5. Infrastructure & Simulation ===
+# 屏蔽 Python 虚拟环境和缓存
+**/venv/
+**/__pycache__/
+*.pyc
+# 屏蔽 Docker 数据卷目录（如果有本地持久化）
+infrastructure/postgres_data/
+
+
+# === 6. OS & IDE Metadata ===
+# 屏蔽系统生成的临时文件
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
