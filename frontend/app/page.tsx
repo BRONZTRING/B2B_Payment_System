@@ -1,174 +1,186 @@
 'use client';
 
-import React, { useState } from 'react';
-import { ArrowUpRight, ShieldCheck, Clock, Wallet, RefreshCw, Loader2, CheckCircle2 } from 'lucide-react';
+import { useState } from 'react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { useWriteContract, useWaitForTransactionReceipt, useAccount } from 'wagmi';
-import { parseUnits, keccak256, toHex } from 'viem';
-// 引入刚才配置好的合约地址和ABI
-import { ESCROW_ADDRESS, ESCROW_ABI, TOKEN_ADDRESS, TOKEN_ABI } from './constants';
+import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadContract } from 'wagmi';
+import { parseEther, parseUnits } from 'viem';
+import axios from 'axios';
+import { 
+  MOCK_TOKEN_ADDRESS, 
+  ESCROW_CONTRACT_ADDRESS, 
+  ERC20_ABI, 
+  ESCROW_ABI 
+} from './constants';
 
-// 模拟数据 (UI展示用)
-const MOCK_TRANSACTIONS = [
-  { id: 'ORD-7782-XJ', counterparty: 'Shenzhen Electronics Ltd.', amount: '50,000.00', currency: 'USDT', status: 'LOCKED', date: '2 mins ago' },
-  { id: 'ORD-9921-MC', counterparty: 'Global Logistics GmbH', amount: '12,500.00', currency: 'USDT', status: 'RELEASED', date: '2 hours ago' },
-];
-
-export default function PaymentDashboard() {
-  const { address } = useAccount();
+export default function Home() {
+  const { address, isConnected } = useAccount();
   
-  // Wagmi 钩子：用于写合约
-  const { writeContract, data: hash, isPending } = useWriteContract();
-  
-  // 监听交易是否上链确认
-  const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({
-    hash,
-  });
+  // 表单状态
+  const [seller, setSeller] = useState('');
+  const [amount, setAmount] = useState('');
+  const [goods, setGoods] = useState('High-value chips batch #2024');
+  const [loading, setLoading] = useState(false);
+  const [logs, setLogs] = useState<string[]>([]);
 
-  // 状态：是否已授权
-  const [isApproved, setIsApproved] = useState(false);
+  // 链上交互 Hooks
+  const { writeContractAsync } = useWriteContract();
 
-  // 1. 授权 (Approve)
-  const handleApprove = async () => {
-    if (!address) return alert("请先连接钱包！");
-    try {
-      console.log("正在申请授权...");
-      
-      // 【修改点】不再授权无限金额，只授权本次交易需要的 100 USDT
-      // 这样可能减少 MetaMask 的部分风险提示
-      const amountToApprove = parseUnits('100', 18);
-      
-      writeContract({
-        address: TOKEN_ADDRESS,
-        abi: TOKEN_ABI,
-        functionName: 'approve',
-        args: [ESCROW_ADDRESS, amountToApprove],
-      });
-      
-      // 模拟授权成功状态
-      setTimeout(() => setIsApproved(true), 2000); 
-    } catch (error) {
-      console.error("授权失败:", error);
-    }
-  };
+  // 添加日志辅助函数
+  const addLog = (msg: string) => setLogs(prev => [...prev, `[${new Date().toLocaleTimeString()}] ${msg}`]);
 
-  // 2. 支付 (Create Order)
+  // === 核心逻辑：提交订单 ===
   const handleCreateOrder = async () => {
-    if (!address) return alert("请先连接钱包！");
+    if (!isConnected || !address) return alert('Please connect wallet');
+    setLoading(true);
+    setLogs([]); // 清空旧日志
 
     try {
-      console.log("正在发起支付...");
-      
-      // 模拟订单数据
-      const amount = parseUnits('100', 18); // 100 USDT
-      const goodsHash = keccak256(toHex("iPhone 16 Pro Max")); // 计算哈希
-      const sellerAddress = "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"; // Anvil 的第二个测试账户
+      // Step 1: 检查并授权 USDT (Approve)
+      addLog("1. Requesting Token Approval...");
+      const approveTx = await writeContractAsync({
+        address: MOCK_TOKEN_ADDRESS,
+        abi: ERC20_ABI,
+        functionName: 'approve',
+        args: [ESCROW_CONTRACT_ADDRESS, parseEther(amount)], // 简单起见，这里假设 MockUSDT 精度是 18
+      });
+      addLog(`> Approval Tx Sent: ${approveTx}`);
+      // 在真实场景应等待 approve 确认，这里为演示流畅性直接进行下一步 (本地链极快)
 
-      // 调用合约的 createOrder 函数
-      writeContract({
-        address: ESCROW_ADDRESS,
+      // Step 2: 请求后端 AI 风控签名
+      addLog("2. Calling Risk Control API (Go Backend)...");
+      const response = await axios.post('http://localhost:8080/api/orders', {
+        buyer: address,
+        seller: seller,
+        token: MOCK_TOKEN_ADDRESS,
+        amount: parseEther(amount).toString(), // 转为 Wei 字符串传给后端
+        goods_content: goods,
+        chain_id: 31337 // 本地链 ID (Anvil 默认)
+      });
+
+      const { signature, goods_hash, risk_score } = response.data;
+      addLog(`> AI Risk Check Passed! Score: ${risk_score}`);
+      addLog(`> Got Signature: ${signature.slice(0, 10)}...`);
+
+      // Step 3: 上链创建订单 (Create Order)
+      addLog("3. Creating Order on Blockchain...");
+      const createTx = await writeContractAsync({
+        address: ESCROW_CONTRACT_ADDRESS,
         abi: ESCROW_ABI,
         functionName: 'createOrder',
         args: [
-          sellerAddress,
-          TOKEN_ADDRESS,
-          amount,
-          goodsHash
+          seller as `0x${string}`,
+          MOCK_TOKEN_ADDRESS,
+          parseEther(amount),
+          goods_hash as `0x${string}`,
+          BigInt(Math.floor(Date.now() / 1000) + 3600), // deadline: 1 hour later
+          signature as `0x${string}`
         ],
       });
       
-    } catch (error) {
-      console.error("支付失败:", error);
-      alert("支付失败，请检查控制台(F12)");
+      addLog(`✅ Order Created Successfully! Tx Hash: ${createTx}`);
+      alert('Order Created on Chain!');
+
+    } catch (error: any) {
+      console.error(error);
+      addLog(`❌ Error: ${error.message || JSON.stringify(error)}`);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-200 font-sans selection:bg-indigo-500/30">
-      <header className="border-b border-slate-800 bg-slate-900/50 backdrop-blur-md sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-500/20">
-              <ShieldCheck className="w-5 h-5 text-white" />
-            </div>
-            <span className="font-bold text-lg tracking-tight text-white">SecureChain <span className="text-indigo-400">Pay</span></span>
-          </div>
+    <main className="min-h-screen p-8 bg-gray-50 text-gray-800 font-sans">
+      <div className="max-w-4xl mx-auto">
+        {/* 头部导航 */}
+        <header className="flex justify-between items-center mb-12">
+          <h1 className="text-3xl font-bold text-blue-900">
+            🛡️ B2B Secure Payment <span className="text-sm font-normal text-gray-500">(Master Thesis Demo)</span>
+          </h1>
+          <ConnectButton />
+        </header>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           
-          <div className="flex items-center gap-4">
-             <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-slate-800 rounded-full border border-slate-700 text-xs font-mono text-emerald-400">
-                <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-                Sepolia Testnet
-             </div>
-             <ConnectButton showBalance={false} chainStatus="none" />
-          </div>
-        </div>
-      </header>
+          {/* 左侧：表单区域 */}
+          <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+            <h2 className="text-xl font-semibold mb-6 flex items-center">
+              <span className="bg-blue-100 text-blue-600 p-2 rounded-lg mr-3">📝</span> 
+              Create New Order
+            </h2>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Seller Address</label>
+                <input 
+                  type="text" 
+                  placeholder="0x..." 
+                  value={seller}
+                  onChange={e => setSeller(e.target.value)}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition"
+                />
+                <p className="text-xs text-gray-400 mt-1">Try using one of the Anvil accounts</p>
+              </div>
 
-      <main className="max-w-7xl mx-auto px-6 py-8 space-y-8">
-        
-        {/* 顶部操作区 */}
-        <div className="flex justify-between items-end">
-          <div>
-            <h1 className="text-3xl font-bold text-white mb-2">采购支付概览</h1>
-            <p className="text-slate-400">当前环境: 本地全栈联调模式</p>
-          </div>
-          
-          <div className="flex gap-3">
-            {/* 步骤 1: 授权按钮 */}
-            {!isApproved && !isConfirmed && (
-               <button 
-               onClick={handleApprove}
-               disabled={isPending}
-               className="flex items-center gap-2 px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-bold transition-all"
-             >
-               {isPending ? <Loader2 className="animate-spin" /> : <CheckCircle2 className="w-5 h-5" />}
-               步骤 1: 授权合约扣款
-             </button>
-            )}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Amount (Mock USDT)</label>
+                <input 
+                  type="number" 
+                  placeholder="1000" 
+                  value={amount}
+                  onChange={e => setAmount(e.target.value)}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                />
+              </div>
 
-            {/* 步骤 2: 支付按钮 */}
-            <button 
-              onClick={handleCreateOrder}
-              disabled={!isApproved && !isConfirmed} // 未授权时禁用
-              className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all shadow-lg active:scale-95 ${
-                isApproved ? 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-indigo-500/20' : 'bg-slate-800 text-slate-500 cursor-not-allowed'
-              }`}
-            >
-              {isPending || isConfirming ? <Loader2 className="animate-spin" /> : <ArrowUpRight className="w-5 h-5" />}
-              {isPending ? '钱包签名中...' : isConfirming ? '链上确认中...' : '步骤 2: 发起支付测试'}
-            </button>
-          </div>
-        </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Goods Description (Privacy Protected)</label>
+                <textarea 
+                  rows={3}
+                  value={goods}
+                  onChange={e => setGoods(e.target.value)}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                />
+                <p className="text-xs text-green-600 mt-1">✨ Content will be hashed. Only hash goes on-chain.</p>
+              </div>
 
-        {/* 交易状态提示条 */}
-        {hash && (
-          <div className="p-4 bg-slate-900 border border-emerald-500/30 rounded-lg break-all font-mono text-xs text-slate-400 animate-in fade-in slide-in-from-top-2">
-            <div className="text-emerald-400 mb-1 font-bold">🚀 交易已发送!</div>
-            <div>Hash: {hash}</div>
-            {isConfirmed && <div className="text-white mt-2 font-bold bg-emerald-500/20 p-2 rounded">✅ 链上确认成功！资金已锁定在智能合约中。</div>}
-          </div>
-        )}
-
-        {/* 资产卡片 (UI展示) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="p-6 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700/50 relative overflow-hidden">
-            <Wallet className="absolute top-0 right-0 w-24 h-24 text-white opacity-5 p-4" />
-            <h3 className="text-slate-400 text-sm font-medium mb-1">钱包余额</h3>
-            <div className="text-3xl font-bold text-white tracking-tight">10,000.00 <span className="text-lg text-slate-500 font-normal">ETH</span></div>
-          </div>
-          <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 relative">
-            <h3 className="text-slate-400 text-sm font-medium mb-1">智能合约托管中</h3>
-            <div className="text-3xl font-bold text-white tracking-tight">0.00 <span className="text-lg text-slate-500 font-normal">USDT</span></div>
-          </div>
-          <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800">
-            <h3 className="text-slate-400 text-sm font-medium mb-1">AI 风控系统</h3>
-            <div className="flex items-center gap-2 mt-2 text-emerald-400 text-sm">
-               <ShieldCheck className="w-4 h-4" /> 系统运行正常
+              <button
+                onClick={handleCreateOrder}
+                disabled={loading || !isConnected}
+                className={`w-full py-4 rounded-xl font-bold text-white shadow-md transition-all
+                  ${loading || !isConnected 
+                    ? 'bg-gray-400 cursor-not-allowed' 
+                    : 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 hover:shadow-lg transform hover:-translate-y-0.5'
+                  }`}
+              >
+                {loading ? 'Processing Risk Check...' : '🚀 Submit Order with AI Risk Check'}
+              </button>
             </div>
           </div>
+
+          {/* 右侧：系统日志终端 */}
+          <div className="bg-gray-900 p-6 rounded-xl shadow-lg text-green-400 font-mono text-sm overflow-hidden flex flex-col">
+            <h2 className="text-gray-400 mb-4 border-b border-gray-700 pb-2 flex justify-between">
+              <span>&gt; System Terminal</span>
+              <span className="text-xs bg-gray-800 px-2 py-0.5 rounded">Layer 2 Connected</span>
+            </h2>
+            <div className="flex-1 overflow-y-auto space-y-2 max-h-[400px]">
+              {logs.length === 0 && (
+                <div className="text-gray-600 italic">Waiting for interaction...</div>
+              )}
+              {logs.map((log, i) => (
+                <div key={i} className="break-all animate-pulse-short">
+                  {log}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
 
-      </main>
-    </div>
+        {/* 底部说明 */}
+        <div className="mt-12 text-center text-gray-400 text-sm">
+          <p>© 2026 Master Thesis Project. Powered by Sepolia (Simulated), Go, and Next.js.</p>
+        </div>
+      </div>
+    </main>
   );
 }

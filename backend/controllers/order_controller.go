@@ -11,68 +11,69 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
-// CreateOrderInput 定义前端传来的 JSON 参数结构
+// 引用 database.go 中的 DB 和模型
+// 注意：在同个 main 包下可以直接用，如果拆分了包需要 import
+// 这里为了简化，我们假设您在 main.go 里把 DB 传过来，或者直接放在 global 变量里
+// 咱们用最简单的全局变量方案 (需配合修改 main.go 导出 DB)
+
+// 定义输入结构
 type CreateOrderInput struct {
-	Buyer        string `json:"buyer" binding:"required"`         // 买家钱包地址
-	Seller       string `json:"seller" binding:"required"`        // 卖家钱包地址
-	TokenAddress string `json:"token" binding:"required"`         // 支付代币地址
-	Amount       string `json:"amount" binding:"required"`        // 金额 (字符串格式，防止大数精度丢失)
-	GoodsContent string `json:"goods_content" binding:"required"` // 货物清单明文 (将被转化为 Privacy Hash)
-	ChainId      int64  `json:"chain_id" binding:"required"`      // 链ID (Sepolia=11155111)
+	Buyer        string `json:"buyer" binding:"required"`
+	Seller       string `json:"seller" binding:"required"`
+	TokenAddress string `json:"token" binding:"required"`
+	Amount       string `json:"amount" binding:"required"`
+	GoodsContent string `json:"goods_content" binding:"required"`
+	ChainId      int64  `json:"chain_id" binding:"required"`
 }
 
-// CreateOrder 处理订单请求：计算哈希 -> AI 风控检查 -> 签名授权
+// 数据库模型 (复制一份避免循环引用，或放在单独 models 包)
+type OrderModel struct {
+	ID        uint      `gorm:"primaryKey" json:"id"`
+	OrderId   int64     `json:"order_id"` // 链上ID
+	Buyer     string    `json:"buyer"`
+	Seller    string    `json:"seller"`
+	Amount    string    `json:"amount"`
+	Goods     string    `json:"goods"`
+	Status    string    `json:"status"`
+	TxHash    string    `json:"tx_hash"`
+	CreatedAt time.Time `json:"created_at"`
+}
+
+var db *gorm.DB
+
+// SetDB 初始化注入
+func SetDB(database *gorm.DB) {
+	db = database
+}
+
+// CreateOrder: 仅做风控签名 (第一步)
 func CreateOrder(c *gin.Context) {
 	var input CreateOrderInput
-
-	// 1. 参数绑定与校验
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	// 2. 【核心学术点】计算隐私哈希 (Privacy Hash)
-	// 将敏感的货物信息 (GoodsContent) 转化为不可逆的 SHA256 哈希
-	// 链上只存哈希，不存明文，实现隐私保护
+	// 1. 计算哈希
 	hash := sha256.Sum256([]byte(input.GoodsContent))
-	// 转换为 [32]byte 格式供签名使用
 	var goodsHashBytes [32]byte
 	copy(goodsHashBytes[:], hash[:])
-	// 转换为 Hex 字符串返回给前端 (调试用)
 	goodsHashHex := fmt.Sprintf("0x%x", hash)
 
-	// 3. 准备签名数据类型
-	buyerAddr := common.HexToAddress(input.Buyer)
-	sellerAddr := common.HexToAddress(input.Seller)
-	tokenAddr := common.HexToAddress(input.TokenAddress)
-
-	amountBig, ok := new(big.Int).SetString(input.Amount, 10)
-	if !ok {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid amount format"})
-		return
-	}
-
-	// 设定期限: 当前时间 + 1小时 (防止签名被永久滥用，增强安全性)
+	// 2. 生成签名
+	amountBig, _ := new(big.Int).SetString(input.Amount, 10)
 	deadline := big.NewInt(time.Now().Add(1 * time.Hour).Unix())
 	chainIdBig := big.NewInt(input.ChainId)
 
-	// 4. 获取后端私钥 (模拟 Risk Oracle 身份)
-	// 注意：main.go 会负责加载 .env 文件，所以这里直接读环境变量
 	privateKey := os.Getenv("PRIVATE_KEY")
-	if privateKey == "" {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Server configuration error: PRIVATE_KEY missing"})
-		return
-	}
-
-	// 5. 【核心功能】生成 EIP-191 风控签名
-	// 在论文中，这里代表 "AI Risk Model Passed -> Approve Transaction"
 	signature, err := utils.GenerateRiskSignature(
 		privateKey,
-		buyerAddr,
-		sellerAddr,
-		tokenAddr,
+		common.HexToAddress(input.Buyer),
+		common.HexToAddress(input.Seller),
+		common.HexToAddress(input.TokenAddress),
 		amountBig,
 		goodsHashBytes,
 		deadline,
@@ -80,17 +81,72 @@ func CreateOrder(c *gin.Context) {
 	)
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Failed to generate signature: %v", err)})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Sign failed"})
 		return
 	}
 
-	// 6. 返回结果给前端
-	// 前端将使用 signature 和 goods_hash 调用智能合约
+	// 注意：此时我们还不存数据库，因为链上交易还没发！
+	// 只有前端确认上链成功后，再调一个接口来保存，或者在这里先存一个 "PENDING_CHAIN" 状态
+
 	c.JSON(http.StatusOK, gin.H{
 		"message":    "Risk check passed",
-		"risk_score": 0.05, // 模拟 AI 评分 (低风险)
 		"signature":  signature,
 		"goods_hash": goodsHashHex,
 		"deadline":   deadline.String(),
 	})
+}
+
+// SyncOrder: 前端上链成功后，调用此接口同步数据到数据库
+func SyncOrder(c *gin.Context) {
+	var order OrderModel
+	if err := c.ShouldBindJSON(&order); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	order.Status = "LOCKED" // 初始状态：资金已锁定
+	order.CreatedAt = time.Now()
+
+	if result := db.Create(&order); result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Order synced to database", "data": order})
+}
+
+// GetOrders: 获取我的订单列表 (买家或卖家)
+func GetOrders(c *gin.Context) {
+	userAddress := c.Query("user")
+	role := c.Query("role") // "buyer" or "seller"
+
+	var orders []OrderModel
+
+	query := db.Model(&OrderModel{})
+	if role == "buyer" {
+		query = query.Where("buyer = ?", userAddress)
+	} else if role == "seller" {
+		query = query.Where("seller = ?", userAddress)
+	} else {
+		// 查询所有涉及该地址的订单
+		query = query.Where("buyer = ? OR seller = ?", userAddress, userAddress)
+	}
+
+	query.Order("created_at desc").Find(&orders)
+	c.JSON(http.StatusOK, gin.H{"data": orders})
+}
+
+// UpdateStatus: 卖家发货 / 买家收货
+func UpdateStatus(c *gin.Context) {
+	id := c.Param("id")
+	var input struct {
+		Status string `json:"status"` // SHIPPED, COMPLETED
+	}
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	db.Model(&OrderModel{}).Where("id = ?", id).Update("status", input.Status)
+	c.JSON(http.StatusOK, gin.H{"message": "Status updated"})
 }

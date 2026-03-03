@@ -1,4 +1,4 @@
-module b2b-backend
+module b2b_backend
 
 go 1.25.0
 
