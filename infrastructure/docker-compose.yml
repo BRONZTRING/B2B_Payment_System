@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+  # 1. 数据库 (PostgreSQL) - 存储订单与日志
   db:
     image: postgres:15-alpine
     container_name: b2b_postgres
@@ -13,6 +14,33 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d b2b_payment_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # 2. 区块链节点 (Anvil) - 本地以太坊仿真
+  anvil:
+    image: ghcr.io/foundry-rs/foundry:latest
+    container_name: b2b_anvil
+    # 启动 anvil 并监听所有接口，出块时间设为1秒 (根据手册 "演示策略" 建议)
+    command: anvil --host 0.0.0.0 --block-time 1
+    ports:
+      - "8545:8545"
+
+  # 3. AI 风控服务 (Python FastAPI)
+  ai_service:
+    build:
+      context: ../ai_service
+      dockerfile: Dockerfile
+    container_name: b2b_ai
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../ai_service:/app
+    environment:
+      - PYTHONUNBUFFERED=1
 
 volumes:
   postgres_data:
