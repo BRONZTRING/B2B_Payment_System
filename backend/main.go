@@ -1,71 +1,67 @@
 package main
 
 import (
-	"log"
-	"net/http"
-	"os"
-
 	"b2b_backend/controllers"
+	"b2b_backend/initializers"
+	"b2b_backend/models"
+	"b2b_backend/utils"
+	"fmt"
+	"os"
+	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
-	"github.com/rs/cors"
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
 )
 
+func init() {
+	initializers.ConnectToDB()
+}
+
 func main() {
-	// 1. 加载环境变量 (.env)
-	if err := godotenv.Load("../.env"); err != nil {
-		log.Println("Warning: No .env file found in root, using system env variables")
+	r := GinRouter()
+
+	// 自动迁移
+	initializers.DB.AutoMigrate(&models.User{}, &models.Order{})
+	fmt.Println("📦 Database Migration Completed!")
+
+	// --- 核弹重置逻辑 ---
+	// 手册要求: 在 Go 后端启动且 RUN_SEEDER=true 时, 强制执行 DB 清洗和数据注入
+	if os.Getenv("RUN_SEEDER") == "true" {
+		utils.NuclearReset()
 	}
+	// ------------------
 
-	// 2. 初始化 SQLite 数据库 (自动创建 b2b_ledger.db 文件)
-	db, err := gorm.Open(sqlite.Open("b2b_ledger.db"), &gorm.Config{})
-	if err != nil {
-		log.Fatal("Failed to connect to database:", err)
-	}
+	r.Run(":8080")
+}
 
-	// 自动迁移表结构：如果没有表，会自动根据 Order 结构体建表
-	db.AutoMigrate(&controllers.Order{})
-	log.Println("📚 Database connected and migrated (SQLite: b2b_ledger.db)")
-
-	// 将数据库实例注入到控制器中
-	controllers.SetDB(db)
-
-	// 3. 配置 Gin 路由框架与 CORS (解决跨域问题)
+func GinRouter() *gin.Engine {
 	r := gin.Default()
 
-	corsConfig := cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:3000"},
-		AllowedMethods:   []string{"GET", "POST", "PUT", "OPTIONS"},
-		AllowedHeaders:   []string{"Origin", "Content-Type", "Authorization"},
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:3000"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
+
+	r.GET("/health", func(c *gin.Context) {
+		var userCount int64
+		var orderCount int64
+		initializers.DB.Model(&models.User{}).Count(&userCount)
+		initializers.DB.Model(&models.Order{}).Count(&orderCount)
+
+		c.JSON(200, gin.H{
+			"status": "ok",
+			"stats": gin.H{
+				"users":  userCount,
+				"orders": orderCount,
+			},
+		})
 	})
-	r.Use(func(c *gin.Context) {
-		handler := corsConfig.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			c.Next()
-		}))
-		handler.ServeHTTP(c.Writer, c.Request)
-	})
 
-	// 4. 注册 API 路由
-	api := r.Group("/api")
-	{
-		api.GET("/ping", func(c *gin.Context) { c.JSON(http.StatusOK, gin.H{"msg": "pong"}) })
+	r.POST("/users", controllers.RegisterUser)
 
-		// 核心业务流转 API
-		api.POST("/orders", controllers.CreateOrder)                 // 1. 买家下单并获取风控签名
-		api.POST("/orders/sync", controllers.SyncChainStatus)        // 2. 买家上链成功后，同步状态为 PAID
-		api.GET("/orders", controllers.GetOrders)                    // 3. 买家/卖家获取自己的订单列表
-		api.PUT("/orders/:id/status", controllers.UpdateOrderStatus) // 4. 卖家发货/买家收货，更新状态
-	}
-
-	// 5. 启动服务
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-	}
-	log.Printf("🚀 B2B Backend Engine running on port %s", port)
-	r.Run(":" + port)
+	return r
 }
