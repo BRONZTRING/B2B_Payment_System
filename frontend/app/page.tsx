@@ -1,312 +1,229 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { parseEther, decodeEventLog } from 'viem';
-import axios from 'axios';
-import { useBurnerWallet } from '../hooks/useBurnerWallet';
-import { 
-  MOCK_TOKEN_ADDRESS, 
-  ESCROW_CONTRACT_ADDRESS, 
-  ERC20_ABI, 
-  ESCROW_ABI 
-} from './constants';
+import { useEffect, useState } from "react";
+import { parseAbi, parseEther } from "viem";
+import { BACKEND_URL, MOCK_ERC20_ADDRESS, PAYMENT_ESCROW_ADDRESS, ERC20_ABI, ESCROW_ABI } from "./constants";
+import { useBurnerWallet } from "../hooks/useBurnerWallet";
+
+interface Order {
+  ID: string;
+  Amount: number;
+  Status: string;
+  Origin: string;
+  Destination: string;
+  RiskScore: number;
+  IsFlagged: boolean;
+  TxHash: string;
+}
 
 export default function Dashboard() {
-  const { address, walletClient, isReady } = useBurnerWallet();
-  const [viewRole, setViewRole] = useState<'buyer' | 'seller'>('buyer');
-  const [orders, setOrders] = useState<any[]>([]);
-  const [loadingMsg, setLoadingMsg] = useState('');
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [actionLog, setActionLog] = useState<string>("系统就绪，等待交互...");
   
-  // 订单表单 (买家专用)
-  const [sellerAddr, setSellerAddr] = useState('');
-  const [amount, setAmount] = useState('50000');
-  const [goods, setGoods] = useState('High-value tech components batch #001');
+  // 引入隐形钱包
+  const { account, walletClient } = useBurnerWallet();
 
-  // 初始化：请求列表 & 检查余额
+  const fetchOrders = () => {
+    fetch(`${BACKEND_URL}/api/orders`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) setOrders(data.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("获取订单失败:", err);
+        setLoading(false);
+      });
+  };
+
   useEffect(() => {
-    if (isReady && address) {
-      fetchOrders();
-      checkAndMintMockUSDT();
-    }
-  }, [isReady, address, viewRole]);
+    fetchOrders();
+    // 简易轮询：每5秒自动刷新一次数据
+    const interval = setInterval(fetchOrders, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
-  // 获取订单列表
-  const fetchOrders = async () => {
+  // --- Web3 智能合约交互逻辑 ---
+
+  const handleMint = async () => {
     try {
-      const res = await axios.get(`http://localhost:8080/api/orders?user=${address}&role=${viewRole}`);
-      setOrders(res.data.data || []);
-    } catch (err) {
-      console.error("Failed to fetch orders", err);
+      setActionLog("⏳ 正在请求铸造 BUSD 测试币...");
+      const hash = await walletClient.writeContract({
+        address: MOCK_ERC20_ADDRESS as `0x${string}`,
+        abi: parseAbi(ERC20_ABI),
+        functionName: 'mint',
+        args: [account.address, parseEther("100000")], // 铸造 10 万个 BUSD
+      });
+      setActionLog(`✅ 铸造成功! 交易哈希: ${hash.substring(0, 15)}...`);
+    } catch (e: any) {
+      setActionLog(`❌ 铸造失败: ${e.shortMessage || e.message}`);
     }
   };
 
-  // 极致 UX：如果用户没钱，后台自动给他打 100 万测试 USDT！
-  const checkAndMintMockUSDT = async () => {
+  const handleApprove = async () => {
     try {
-      const balance = await walletClient.readContract({
-        address: MOCK_TOKEN_ADDRESS,
-        abi: ERC20_ABI,
-        functionName: 'balanceOf',
-        args: [address]
-      });
-      if (balance === 0n) {
-        console.log("Empty wallet detected. Auto-minting Mock USDT...");
-        await walletClient.writeContract({
-          address: MOCK_TOKEN_ADDRESS,
-          abi: ERC20_ABI,
-          functionName: 'mint',
-          args: [address, parseEther('1000000')]
-        });
-      }
-    } catch (e) {
-      console.error("Auto mint failed", e);
-    }
-  };
-
-  // ==========================================
-  // 核心流转 1：买家发起订单 (支付)
-  // ==========================================
-  const handleCreateOrder = async () => {
-    if (!sellerAddr) return alert("Please enter seller address!");
-    setLoadingMsg('1/3 AI Risk Engine analyzing...');
-    
-    try {
-      // Step 1: 请求后端生成订单并获取 AI 风控签名
-      const res = await axios.post('http://localhost:8080/api/orders', {
-        buyer: address,
-        seller: sellerAddr,
-        token: MOCK_TOKEN_ADDRESS,
-        amount: parseEther(amount).toString(),
-        goods_content: goods,
-        chain_id: 31337 
-      });
-      
-      const { order_id, signature, goods_hash, deadline } = res.data;
-      
-      // Step 2: 隐形钱包自动静默授权 (Approve)
-      setLoadingMsg('2/3 Approving Mock USDT (Silent)...');
-      const approveHash = await walletClient.writeContract({
-        address: MOCK_TOKEN_ADDRESS,
-        abi: ERC20_ABI,
+      setActionLog("⏳ 正在授权担保合约扣款...");
+      const hash = await walletClient.writeContract({
+        address: MOCK_ERC20_ADDRESS as `0x${string}`,
+        abi: parseAbi(ERC20_ABI),
         functionName: 'approve',
-        args: [ESCROW_CONTRACT_ADDRESS, parseEther(amount)]
+        args: [PAYMENT_ESCROW_ADDRESS as `0x${string}`, parseEther("1000000")], // 授权高额度
       });
-      await walletClient.waitForTransactionReceipt({ hash: approveHash });
-
-      // Step 3: 隐形钱包自动调用担保合约上链
-      setLoadingMsg('3/3 Smart Escrow Locking Funds...');
-      const txHash = await walletClient.writeContract({
-        address: ESCROW_CONTRACT_ADDRESS,
-        abi: ESCROW_ABI,
-        functionName: 'createOrder',
-        args: [
-          sellerAddr as `0x${string}`,
-          MOCK_TOKEN_ADDRESS,
-          parseEther(amount),
-          goods_hash as `0x${string}`,
-          BigInt(deadline),
-          signature as `0x${string}`
-        ]
-      });
-
-      // 解析链上日志，获取生成的真实 orderId
-      const receipt = await walletClient.waitForTransactionReceipt({ hash: txHash });
-      let contractOrderId = 0;
-      for (const log of receipt.logs) {
-        try {
-          const decoded = decodeEventLog({ abi: ESCROW_ABI, data: log.data, topics: log.topics });
-          if (decoded.eventName === 'OrderCreated') contractOrderId = Number((decoded.args as any).orderId);
-        } catch (e) {}
-      }
-
-      // Step 4: 将链上成功状态同步回后端
-      await axios.post('http://localhost:8080/api/orders/sync', {
-        id: order_id,
-        contract_order_id: contractOrderId,
-        tx_hash: txHash
-      });
-
-      alert("🎉 Payment Secured on Chain!");
-      fetchOrders();
-    } catch (err: any) {
-      alert("Error: " + (err.response?.data?.error || err.message));
-    } finally {
-      setLoadingMsg('');
+      setActionLog(`✅ 授权成功! 交易哈希: ${hash.substring(0, 15)}...`);
+    } catch (e: any) {
+      setActionLog(`❌ 授权失败: ${e.shortMessage || e.message}`);
     }
   };
 
-  // ==========================================
-  // 核心流转 2：卖家发货
-  // ==========================================
-  const handleShip = async (dbId: string) => {
-    setLoadingMsg('Updating logistics status...');
+  const handleCreateOrder = async () => {
     try {
-      await axios.put(`http://localhost:8080/api/orders/${dbId}/status`, {
-        status: 'SHIPPED',
-        logistics_id: `FEDEX-${Math.floor(Math.random() * 1000000)}`
+      setActionLog("⏳ 正在链上发起担保支付...");
+      const orderId = `ORD-NEW-${Math.floor(Math.random() * 10000)}`;
+      const sellerAddress = "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"; // Anvil 账号 1 (卖家)
+      const amount = parseEther("8888"); // 固定支付 8888 BUSD 演示
+
+      const hash = await walletClient.writeContract({
+        address: PAYMENT_ESCROW_ADDRESS as `0x${string}`,
+        abi: parseAbi(ESCROW_ABI),
+        functionName: 'createAndPayOrder',
+        args: [orderId, sellerAddress as `0x${string}`, amount],
       });
-      fetchOrders();
-    } finally {
-      setLoadingMsg('');
+      setActionLog(`✅ 支付成功! 订单号: ${orderId}, 链上哈希: ${hash.substring(0, 15)}...`);
+      // 提示：实际上这里应该还要把这个订单发送给 Go 后端存入数据库，我们在下一步完善它
+    } catch (e: any) {
+      setActionLog(`❌ 支付失败: ${e.shortMessage || e.message}`);
     }
   };
 
-  // ==========================================
-  // 核心流转 3：买家确认收货 (释放资金)
-  // ==========================================
-  const handleReceive = async (dbId: string, contractOrderId: number) => {
-    setLoadingMsg('Releasing Escrow Funds on Chain...');
-    try {
-      // 链上释放资金
-      const txHash = await walletClient.writeContract({
-        address: ESCROW_CONTRACT_ADDRESS,
-        abi: ESCROW_ABI,
-        functionName: 'releaseFunds',
-        args: [BigInt(contractOrderId)]
-      });
-      await walletClient.waitForTransactionReceipt({ hash: txHash });
-
-      // 后端状态更新
-      await axios.put(`http://localhost:8080/api/orders/${dbId}/status`, {
-        status: 'COMPLETED'
-      });
-      alert("✅ Funds Released to Seller!");
-      fetchOrders();
-    } catch (err: any) {
-      alert("Release failed: " + err.message);
-    } finally {
-      setLoadingMsg('');
-    }
-  };
-
-  if (!isReady) return <div className="p-10 text-center font-mono">Initializing Encrypted Burner Wallet...</div>;
+  // 统计数据
+  const totalVolume = orders.reduce((sum, o) => sum + o.Amount, 0);
+  const shippedCount = orders.filter((o) => o.Status === "SHIPPED").length;
+  const riskCount = orders.filter((o) => o.IsFlagged).length;
 
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-900 font-sans p-6 md:p-12">
-      <div className="max-w-6xl mx-auto space-y-8">
-        
-        {/* 顶部：导航与角色切换器 */}
-        <header className="flex flex-col md:flex-row justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-          <div>
-            <h1 className="text-2xl font-bold text-indigo-900 flex items-center gap-2">
-              🌍 GlobalPay Web3 <span className="text-sm font-normal bg-indigo-100 text-indigo-600 px-2 py-1 rounded-full">V4.0 Escrow</span>
-            </h1>
-            <p className="text-sm text-slate-500 mt-1 font-mono">My Burner Identity: {address}</p>
-          </div>
-          
-          <div className="mt-4 md:mt-0 flex p-1 bg-slate-100 rounded-xl">
-            <button 
-              onClick={() => setViewRole('buyer')}
-              className={`px-6 py-2 rounded-lg font-medium transition-all ${viewRole === 'buyer' ? 'bg-white shadow-sm text-indigo-600' : 'text-slate-500 hover:bg-slate-200'}`}
-            >
-              🛍️ Buyer Console
-            </button>
-            <button 
-              onClick={() => setViewRole('seller')}
-              className={`px-6 py-2 rounded-lg font-medium transition-all ${viewRole === 'seller' ? 'bg-white shadow-sm text-teal-600' : 'text-slate-500 hover:bg-slate-200'}`}
-            >
-              📦 Seller Console
-            </button>
-          </div>
-        </header>
+    <div className="min-h-screen bg-gray-950 text-gray-100 p-8">
+      <header className="mb-8 border-b border-gray-800 pb-4 flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">
+            B2B 跨境支付与物流仿真大屏 (V11.0)
+          </h1>
+          <p className="text-sm text-gray-400 mt-2">Hybrid Blockchain & AI Risk Radar Simulation</p>
+        </div>
+        <div className="flex items-center space-x-2">
+          <span className="flex h-3 w-3 relative">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+          </span>
+          <span className="text-sm font-medium text-emerald-400">System Online</span>
+        </div>
+      </header>
 
-        {/* 动态加载浮层 */}
-        {loadingMsg && (
-          <div className="fixed top-4 right-4 bg-slate-900 text-white px-6 py-3 rounded-xl shadow-2xl z-50 animate-pulse border border-slate-700">
-            ⏳ {loadingMsg}
-          </div>
-        )}
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
-          {/* 左侧：操作区 (仅在买家视角显示创建订单) */}
-          {viewRole === 'buyer' && (
-            <div className="lg:col-span-1 bg-white p-6 rounded-2xl shadow-sm border border-slate-100 h-fit">
-              <h2 className="text-lg font-bold text-slate-800 mb-6 border-b pb-2">Create Trade Order</h2>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-slate-600 mb-1">Supplier (Seller) Address</label>
-                  <input type="text" value={sellerAddr} onChange={e => setSellerAddr(e.target.value)} placeholder="0x..." className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm font-mono"/>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-600 mb-1">Amount (USDT)</label>
-                  <input type="number" value={amount} onChange={e => setAmount(e.target.value)} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm"/>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-600 mb-1">Goods Description (Encrypted)</label>
-                  <textarea rows={3} value={goods} onChange={e => setGoods(e.target.value)} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm"/>
-                </div>
-                <button 
-                  onClick={handleCreateOrder} 
-                  className="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold shadow-md shadow-indigo-200 transition-all transform hover:-translate-y-0.5"
-                >
-                  Pay & Lock Funds 🔒
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* 右侧/全屏：订单历史账本 */}
-          <div className={`${viewRole === 'buyer' ? 'lg:col-span-2' : 'lg:col-span-3'} bg-white p-6 rounded-2xl shadow-sm border border-slate-100`}>
-            <h2 className="text-lg font-bold text-slate-800 mb-6 border-b pb-2">
-              {viewRole === 'buyer' ? 'My Purchase Orders' : 'My Sales Orders'}
-            </h2>
-            
-            {orders.length === 0 ? (
-              <div className="py-12 text-center text-slate-400">No orders found.</div>
-            ) : (
-              <div className="space-y-4">
-                {orders.map(order => (
-                  <div key={order.id} className="p-5 border border-slate-100 rounded-xl hover:shadow-md transition bg-slate-50/50 flex flex-col md:flex-row justify-between items-center gap-4">
-                    
-                    {/* 订单信息 */}
-                    <div className="flex-1 space-y-2">
-                      <div className="flex items-center gap-3">
-                        <span className="text-sm font-mono bg-slate-200 px-2 py-1 rounded text-slate-700">#{order.id.slice(0,6)}</span>
-                        <span className="font-bold text-lg text-slate-800">${parseInt(order.amount).toLocaleString()} USDT</span>
-                        
-                        {/* 状态徽章 */}
-                        {order.status === 'PENDING' && <span className="text-xs bg-slate-200 text-slate-600 px-2 py-1 rounded-full">Pending</span>}
-                        {order.status === 'PAID' && <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">Funds Locked</span>}
-                        {order.status === 'SHIPPED' && <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full">Shipped ({order.logistics_id})</span>}
-                        {order.status === 'COMPLETED' && <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">Completed</span>}
-                      </div>
-                      
-                      <div className="text-sm text-slate-500">
-                        Counterparty: <span className="font-mono">{viewRole === 'buyer' ? order.seller_addr : order.buyer_addr}</span>
-                      </div>
-                      <div className="text-xs text-slate-400 font-mono truncate max-w-md">
-                        Chain Tx: {order.tx_hash || 'Waiting for chain...'}
-                      </div>
-                    </div>
-
-                    {/* 操作按钮 (根据状态和角色) */}
-                    <div>
-                      {viewRole === 'seller' && order.status === 'PAID' && (
-                        <button onClick={() => handleShip(order.id)} className="px-5 py-2 bg-teal-500 hover:bg-teal-600 text-white text-sm font-bold rounded-lg shadow transition">
-                          Ship Goods
-                        </button>
-                      )}
-                      
-                      {viewRole === 'buyer' && order.status === 'SHIPPED' && (
-                        <button onClick={() => handleReceive(order.id, order.contract_order_id)} className="px-5 py-2 bg-green-500 hover:bg-green-600 text-white text-sm font-bold rounded-lg shadow transition">
-                          Confirm Receipt
-                        </button>
-                      )}
-
-                      {order.status === 'COMPLETED' && (
-                        <span className="text-green-500 font-bold text-xl">✓</span>
-                      )}
-                    </div>
-
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
+      {/* --- Web3 仿真控制台 --- */}
+      <div className="bg-gray-900 border border-gray-800 rounded-xl shadow-lg p-6 mb-8">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-lg font-semibold text-gray-200">
+            🚀 Web3 仿真控制台 
+            <span className="ml-3 text-xs font-mono text-emerald-500 bg-emerald-900/20 px-2 py-1 rounded border border-emerald-800/50">
+              隐形钱包已激活: {account.address.substring(0,6)}...{account.address.substring(38)}
+            </span>
+          </h2>
+          <span className="text-sm font-mono text-gray-400 bg-gray-950 px-3 py-1 rounded-md border border-gray-800">
+            {actionLog}
+          </span>
+        </div>
+        <div className="flex space-x-4">
+          <button onClick={handleMint} className="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-sm font-medium transition-colors shadow-lg shadow-blue-900/20">
+            1. 铸造测试币 (Mint BUSD)
+          </button>
+          <button onClick={handleApprove} className="px-5 py-2.5 bg-yellow-600 hover:bg-yellow-500 text-white rounded-lg text-sm font-medium transition-colors shadow-lg shadow-yellow-900/20">
+            2. 授权担保扣款 (Approve)
+          </button>
+          <button onClick={handleCreateOrder} className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-sm font-medium transition-colors shadow-lg shadow-emerald-900/20">
+            3. 链上担保支付 (Create Order)
+          </button>
         </div>
       </div>
-    </main>
+
+      {/* 顶部数据看板 */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-lg">
+          <h3 className="text-gray-400 text-sm font-medium">总交易流水 (USD)</h3>
+          <p className="text-3xl font-bold text-white mt-2">
+            ${totalVolume.toLocaleString()}
+          </p>
+        </div>
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-lg">
+          <h3 className="text-gray-400 text-sm font-medium">在途物流 (SHIPPED)</h3>
+          <p className="text-3xl font-bold text-blue-400 mt-2">{shippedCount} 笔</p>
+        </div>
+        <div className="bg-gray-900 border border-red-900/50 rounded-xl p-6 shadow-lg relative overflow-hidden">
+          <h3 className="text-red-400 text-sm font-medium">AI 拦截高风险交易</h3>
+          <p className="text-3xl font-bold text-red-500 mt-2">{riskCount} 笔</p>
+          <div className="absolute -right-4 -top-4 w-24 h-24 bg-red-500/10 rounded-full blur-2xl"></div>
+        </div>
+      </div>
+
+      {/* 核心数据表格 */}
+      <div className="bg-gray-900 border border-gray-800 rounded-xl shadow-lg overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-800 bg-gray-900">
+          <h2 className="text-lg font-semibold text-gray-200">实时订单与物流仿真流</h2>
+        </div>
+        <div className="overflow-x-auto max-h-[600px] overflow-y-auto">
+          {loading ? (
+            <div className="p-8 text-center text-gray-500 animate-pulse">正在从区块链与后端拉取数据...</div>
+          ) : (
+            <table className="w-full text-left text-sm whitespace-nowrap">
+              <thead className="bg-gray-950 text-gray-400 sticky top-0 z-10">
+                <tr>
+                  <th className="px-6 py-3 font-medium">订单编号</th>
+                  <th className="px-6 py-3 font-medium">金额 (USD)</th>
+                  <th className="px-6 py-3 font-medium">状态</th>
+                  <th className="px-6 py-3 font-medium">物流路线</th>
+                  <th className="px-6 py-3 font-medium">AI 风险得分</th>
+                  <th className="px-6 py-3 font-medium">链上哈希</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-800">
+                {orders.map((order) => (
+                  <tr key={order.ID} className={`hover:bg-gray-800/50 transition-colors ${order.IsFlagged ? 'bg-red-950/20' : ''}`}>
+                    <td className="px-6 py-4 font-mono text-gray-300">{order.ID}</td>
+                    <td className="px-6 py-4 font-bold text-emerald-400">${order.Amount.toLocaleString()}</td>
+                    <td className="px-6 py-4">
+                      <span className={`px-2 py-1 rounded-md text-xs font-medium 
+                        ${order.Status === 'COMPLETED' ? 'bg-emerald-500/10 text-emerald-400' : 
+                          order.Status === 'SHIPPED' ? 'bg-blue-500/10 text-blue-400' : 
+                          order.Status === 'PAID' ? 'bg-yellow-500/10 text-yellow-400' : 
+                          'bg-gray-500/10 text-gray-400'}`}>
+                        {order.Status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-gray-400 text-xs">
+                      {order.Origin} <span className="text-gray-600 mx-1">→</span> {order.Destination}
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-16 h-2 bg-gray-800 rounded-full overflow-hidden">
+                          <div 
+                            className={`h-full ${order.RiskScore > 0.8 ? 'bg-red-500' : order.RiskScore > 0.5 ? 'bg-yellow-500' : 'bg-emerald-500'}`} 
+                            style={{ width: `${order.RiskScore * 100}%` }}
+                          ></div>
+                        </div>
+                        <span className={`text-xs ${order.RiskScore > 0.8 ? 'text-red-400' : 'text-gray-400'}`}>
+                          {order.RiskScore.toFixed(2)}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 font-mono text-xs text-gray-500">
+                      {order.TxHash.substring(0, 10)}...{order.TxHash.substring(order.TxHash.length - 4)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
