@@ -1,44 +1,21 @@
-import { useState, useEffect } from 'react';
-import { createWalletClient, http, publicActions, Address } from 'viem';
+import { createWalletClient, http, publicActions } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 import { foundry } from 'viem/chains';
 
-const BURNER_WALLET_KEY = 'b2b_burner_wallet_private_key';
+// 这里使用本地 Anvil 测试网的第0号账号私钥作为买方(Payer)的“隐形钱包”
+// 在真实生产环境中，应由用户输入支付密码在前端解密本地存储的私钥
+const BUYER_PRIVATE_KEY = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 
 export function useBurnerWallet() {
-  const [account, setAccount] = useState<any>(null);
-  const [walletClient, setWalletClient] = useState<any>(null);
-  const [isReady, setIsReady] = useState(false);
+  // 1. 从私钥直接派生出 Web3 账户对象
+  const account = privateKeyToAccount(BUYER_PRIVATE_KEY);
 
-  useEffect(() => {
-    // 1. 读取或生成本地私钥
-    let pk = localStorage.getItem(BURNER_WALLET_KEY) as `0x${string}` | null;
+  // 2. 创建连接到本地 Anvil 测试链的客户端，并扩展公共操作方法
+  const walletClient = createWalletClient({
+    account,
+    chain: foundry,
+    transport: http('http://127.0.0.1:8545'),
+  }).extend(publicActions);
 
-    if (!pk) {
-      // 模拟生成 32 字节私钥
-      const randomBytes = crypto.getRandomValues(new Uint8Array(32));
-      pk = `0x${Array.from(randomBytes).map(b => b.toString(16).padStart(2, '0')).join('')}` as `0x${string}`;
-      localStorage.setItem(BURNER_WALLET_KEY, pk);
-      console.log("🌟 [Burner Wallet] 新商户，已静默生成本地私钥!");
-    }
-
-    const burnerAccount = privateKeyToAccount(pk);
-    setAccount(burnerAccount);
-
-    // 2. 创建无感知签名的 Wallet Client
-    const client = createWalletClient({
-      account: burnerAccount,
-      chain: foundry,
-      transport: http('http://127.0.0.1:8545'),
-    }).extend(publicActions); // 扩展读取链上数据的功能
-
-    setWalletClient(client);
-    setIsReady(true);
-  }, []);
-
-  return {
-    address: account?.address as Address,
-    walletClient,
-    isReady
-  };
+  return { account, walletClient };
 }
