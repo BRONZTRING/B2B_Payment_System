@@ -6,11 +6,10 @@ import { mnemonicToAccount } from "viem/accounts";
 import { foundry } from "viem/chains";
 import { BACKEND_URL, PAYMENT_ESCROW_ADDRESS, MOCK_ERC20_ADDRESS } from "./constants";
 
-// Anvil 默认助记词，用于动态推导 100 个企业的底层隐形金库
 const ANVIL_MNEMONIC = "test test test test test test test test test test test junk";
 const DESTINATIONS = ["Rotterdam, Netherlands", "Hamburg, Germany", "Los Angeles, USA", "Moscow, Russia", "Singapore, Singapore", "Dubai, UAE"];
 
-// 模拟实时汇率 (锚定 1 USD / BUSD)
+// 模拟实时汇率 (锚定 1 USD / BUSD 为基准)
 const FIAT_RATES: Record<string, number> = {
   "USD": 1.00,
   "CNY": 7.23,
@@ -20,7 +19,6 @@ const FIAT_RATES: Record<string, number> = {
   "JPY": 150.12
 };
 
-// 补全 ABI：包含撤销功能和直接转账功能
 const LOCAL_ESCROW_ABI = [
   "function createAndPayOrder(string orderId, address payee, uint256 amount) external",
   "function completeOrder(string orderId) external",
@@ -48,8 +46,8 @@ interface Order {
   SellerID: number;
   PaymentType: string;
   Amount: number;     // 底层 BUSD 金额
-  FiatAmount: number; // 表面法币金额
-  Currency: string;   // 法币类型
+  FiatAmount: number; // 买家扣除的法币金额
+  Currency: string;   // 买家法币类型
   Status: string;
   Origin: string;
   Destination: string;
@@ -61,16 +59,14 @@ export default function BusinessPortal() {
   const [users, setUsers] = useState<User[]>([]);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
-  const [cryptoBalance, setCryptoBalance] = useState(0); // 底层真实 BUSD
+  const [cryptoBalance, setCryptoBalance] = useState(0); 
   const [loading, setLoading] = useState(false);
   
-  // 表单状态
   const [selectedSellerId, setSelectedSellerId] = useState("");
-  const [payAmount, setPayAmount] = useState(""); // 用户输入的法币金额
+  const [payAmount, setPayAmount] = useState(""); // 现在这个代表“卖家要求的目标金额”
   const [payDest, setPayDest] = useState(DESTINATIONS[0]);
-  const [paymentType, setPaymentType] = useState("ESCROW"); // ESCROW 或 DIRECT
+  const [paymentType, setPaymentType] = useState("ESCROW"); 
   
-  // 物流追踪状态
   const [trackingRoute, setTrackingRoute] = useState<any[] | null>(null);
 
   useEffect(() => {
@@ -119,15 +115,36 @@ export default function BusinessPortal() {
     return createWalletClient({ account: getAccount(), chain: foundry, transport: http('http://127.0.0.1:8545') }).extend(publicActions);
   };
 
-  // 表面法币余额计算：底层 BUSD * 本国汇率
+  // 法币余额计算
   const fiatBalance = (cryptoBalance * FIAT_RATES[currentUser?.FiatCurrency || "USD"]).toFixed(2);
 
-  // ================= 银行业务：法币入金 (Deposit) =================
+  // 【核心功能：跨国汇率计算器】
+  const selectedSeller = users.find(u => u.ID === Number(selectedSellerId));
+  const sellerCurrency = selectedSeller ? selectedSeller.FiatCurrency : "USD";
+  const sellerRate = FIAT_RATES[sellerCurrency];
+  const buyerRate = FIAT_RATES[currentUser?.FiatCurrency || "USD"];
+  
+  // 计算逻辑：卖家金额 -> BUSD -> 买家法币金额
+  const busdRequired = parseFloat(payAmount || "0") / sellerRate;
+  const buyerFiatRequired = busdRequired * buyerRate;
+
+  // ================= 弹窗修复 =================
+  const openTracking = (routeJson: string) => {
+    if (!routeJson) return alert("暂无物流信息");
+    try {
+      const parsed = JSON.parse(routeJson);
+      setTrackingRoute(parsed);
+    } catch (e) {
+      alert("物流数据解析失败");
+    }
+  };
+
+  // ================= 法币入金 =================
   const handleDeposit = async () => {
     const depositFiatStr = prompt(`请输入要从银行卡 [${currentUser?.BankAccount}] 转入的金额 (${currentUser?.FiatCurrency}):`, "1000000");
     if (!depositFiatStr) return;
     const depositFiat = parseFloat(depositFiatStr);
-    const requiredBusd = depositFiat / FIAT_RATES[currentUser!.FiatCurrency];
+    const requiredBusd = depositFiat / buyerRate;
 
     setLoading(true);
     try {
@@ -136,25 +153,24 @@ export default function BusinessPortal() {
         address: MOCK_ERC20_ADDRESS as `0x${string}`, abi: parseAbi(LOCAL_ERC20_ABI),
         functionName: 'mint', args: [client.account.address, parseEther(requiredBusd.toString())],
       });
-      alert(`🏦 入金成功！已从银行卡扣除 ${depositFiat} ${currentUser?.FiatCurrency}。`);
+      alert(`🏦 入金成功！系统已将 ${depositFiat} ${currentUser?.FiatCurrency} 转化为底层数字储备。`);
       fetchBalance();
     } catch (e: any) { alert(`入金失败: ${e.shortMessage}`); }
     setLoading(false);
   };
 
-  // ================= 银行业务：法币出金提现 (Withdraw) =================
+  // ================= 法币提现 =================
   const handleWithdraw = async () => {
     const withdrawFiatStr = prompt(`请输入要提现到银行卡 [${currentUser?.BankAccount}] 的金额 (${currentUser?.FiatCurrency}):`, fiatBalance);
     if (!withdrawFiatStr) return;
     const withdrawFiat = parseFloat(withdrawFiatStr);
-    const burnBusd = withdrawFiat / FIAT_RATES[currentUser!.FiatCurrency];
+    const burnBusd = withdrawFiat / buyerRate;
 
     if (burnBusd > cryptoBalance) return alert("❌ 账户余额不足！");
 
     setLoading(true);
     try {
       const client = getWalletClient();
-      // 模拟提现：将底层资产打入黑洞地址销毁
       await client.writeContract({
         address: MOCK_ERC20_ADDRESS as `0x${string}`, abi: parseAbi(LOCAL_ERC20_ABI),
         functionName: 'transfer', args: ["0x000000000000000000000000000000000000dEaD", parseEther(burnBusd.toString())],
@@ -165,27 +181,24 @@ export default function BusinessPortal() {
     setLoading(false);
   };
 
-  // ================= 支付结算 (支持直汇与担保) =================
+  // ================= 多货币汇兑支付 =================
   const handlePayment = async () => {
-    if (!selectedSellerId || !payAmount) return alert("请填写完整表单！");
-    const fiatAmt = parseFloat(payAmount);
-    const busdAmt = fiatAmt / FIAT_RATES[currentUser!.FiatCurrency];
+    if (!selectedSeller || !payAmount) return alert("请填写完整表单！");
     
-    if (cryptoBalance < busdAmt) return alert(`❌ 余额不足！请先从银行卡充值入金。`);
+    // 检查买家底层余额是否足够支付所需的 BUSD
+    if (cryptoBalance < busdRequired) return alert(`❌ 余额不足！您需要大约 ${buyerFiatRequired.toFixed(2)} ${currentUser?.FiatCurrency}。请先入金。`);
 
     setLoading(true);
     try {
       const client = getWalletClient();
-      const seller = users.find(u => u.ID === Number(selectedSellerId));
-      const sellerAccount = mnemonicToAccount(ANVIL_MNEMONIC, { addressIndex: seller!.AccountIndex });
+      const sellerAccount = mnemonicToAccount(ANVIL_MNEMONIC, { addressIndex: selectedSeller.AccountIndex });
       const orderId = `ORD-NEW-${Math.floor(Math.random() * 100000)}`;
-      const amountWei = parseEther(busdAmt.toString());
+      const amountWei = parseEther(busdRequired.toString());
 
       let hash = "";
 
       if (paymentType === "DIRECT") {
-        // 1. P2P 直接打款 (底层调 ERC20 transfer)
-        if(!confirm("⚠️ 警告：您选择了直接打款（无担保）。资金将瞬间到达对方账户且不可撤销！确定继续吗？")) {
+        if(!confirm("⚠️ 警告：您选择了无担保直接打款。资金将瞬间到达对方账户且不可撤销！")) {
             setLoading(false); return;
         }
         hash = await client.writeContract({
@@ -193,7 +206,6 @@ export default function BusinessPortal() {
           functionName: 'transfer', args: [sellerAccount.address, amountWei],
         });
       } else {
-        // 2. 担保支付 (底层调 Escrow)
         await client.writeContract({ 
           address: MOCK_ERC20_ADDRESS as `0x${string}`, abi: parseAbi(LOCAL_ERC20_ABI), 
           functionName: 'approve', args: [PAYMENT_ESCROW_ADDRESS as `0x${string}`, amountWei] 
@@ -204,23 +216,21 @@ export default function BusinessPortal() {
         });
       }
 
-      // 同步到后台
       await fetch(`${BACKEND_URL}/api/orders`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          id: orderId, buyer_id: currentUser!.ID, seller_id: seller!.ID,
-          payment_type: paymentType, amount: busdAmt, fiat_amount: fiatAmt, currency: currentUser!.FiatCurrency,
+          id: orderId, buyer_id: currentUser!.ID, seller_id: selectedSeller.ID,
+          payment_type: paymentType, amount: busdRequired, fiat_amount: buyerFiatRequired, currency: currentUser!.FiatCurrency,
           origin: "Shenzhen, China", destination: payDest, txHash: hash
         })
       });
 
-      alert(`✅ 支付指令已提交。凭证号：${orderId}`);
+      alert(`✅ 支付指令已提交。系统自动按汇率扣除 ${buyerFiatRequired.toFixed(2)} ${currentUser!.FiatCurrency}。`);
       setPayAmount(""); fetchOrders(); fetchBalance();
     } catch (e: any) { alert(`支付失败: ${e.shortMessage}`); }
     setLoading(false);
   };
 
-  // ================= 撤销订单 (买家动作) =================
   const handleRevoke = async (orderId: string) => {
     if (!confirm("确定要撤销此笔担保支付吗？资金将原路退回。")) return;
     setLoading(true);
@@ -233,13 +243,12 @@ export default function BusinessPortal() {
       await fetch(`${BACKEND_URL}/api/orders/${orderId}/status`, {
         method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: "REVOKED" })
       });
-      alert("✅ 订单已成功撤销，资金已退回。");
+      alert("✅ 订单已成功撤销，资金已退回您的账户。");
       fetchOrders(); fetchBalance();
     } catch (e: any) { alert(`撤销失败: 对方可能已发货。${e.shortMessage}`); }
     setLoading(false);
   };
 
-  // ================= 发货 (卖家动作) =================
   const handleShip = async (orderId: string) => {
     const trackingNo = prompt("请输入国际物流单号:", "TRK" + Math.floor(Math.random() * 1000000));
     if (!trackingNo) return;
@@ -253,9 +262,8 @@ export default function BusinessPortal() {
     setLoading(false);
   };
 
-  // ================= 确认收货 (买家动作) =================
   const handleConfirmReceipt = async (orderId: string) => {
-    if (!confirm("确认收货？货款将结转给卖家。")) return;
+    if (!confirm("确认收货？货款将按照汇率结转给卖家。")) return;
     setLoading(true);
     try {
       const client = getWalletClient();
@@ -281,7 +289,7 @@ export default function BusinessPortal() {
         </div>
         <h1 className="text-5xl font-extrabold text-blue-900 mb-3 tracking-tight">TrustPay <span className="text-2xl font-normal text-blue-600">Enterprise</span></h1>
         <p className="text-gray-500 mb-12 text-center max-w-lg text-lg">
-          新一代跨国企业结算网络。<br/>无缝衔接全球法币账户，重塑供应链信任。
+          新一代跨国企业结算网络。<br/>无缝衔接全球法币账户，实时汇率，重塑供应链信任。
         </p>
         
         <div className="bg-white p-10 rounded-3xl shadow-2xl w-full max-w-md border border-gray-100">
@@ -305,7 +313,7 @@ export default function BusinessPortal() {
             <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">中国出口商 (Seller)</label>
             <select className="w-full border-2 border-gray-200 p-4 rounded-xl text-sm bg-gray-50 text-gray-800 focus:border-emerald-500 focus:ring-0 transition" onChange={(e) => setCurrentUser(users.find(u => u.ID === Number(e.target.value)) || null)}>
               <option value="">-- 选择国内供应商 --</option>
-              {users.filter(u => u.Role === 'seller').map(u => <option key={u.ID} value={u.ID}>{u.CompanyName} (CNY)</option>)}
+              {users.filter(u => u.Role === 'seller').map(u => <option key={u.ID} value={u.ID}>{u.CompanyName} ({u.FiatCurrency})</option>)}
             </select>
           </div>
         </div>
@@ -323,14 +331,13 @@ export default function BusinessPortal() {
           </span>
         </div>
         <div className="flex items-center space-x-8">
-          {/* 法币账户模块 */}
           <div className="flex items-center bg-gray-50 border rounded-xl p-2 pr-6">
             <div className="flex flex-col space-y-2 mr-6 ml-2">
-              <button onClick={handleDeposit} disabled={loading} className="text-xs bg-white border shadow-sm hover:bg-gray-50 text-gray-700 px-3 py-1 rounded transition">入金 (Deposit)</button>
-              <button onClick={handleWithdraw} disabled={loading} className="text-xs bg-white border shadow-sm hover:bg-gray-50 text-gray-700 px-3 py-1 rounded transition">提现 (Withdraw)</button>
+              <button onClick={handleDeposit} disabled={loading} className="text-xs bg-white border shadow-sm hover:bg-gray-100 text-gray-700 px-3 py-1 rounded transition font-bold text-green-700">⬇️ 法币入金</button>
+              <button onClick={handleWithdraw} disabled={loading} className="text-xs bg-white border shadow-sm hover:bg-gray-100 text-gray-700 px-3 py-1 rounded transition font-bold text-blue-700">⬆️ 法币提现</button>
             </div>
             <div className="text-right">
-              <div className="text-xs text-gray-400 font-bold mb-1">连结银行卡: {currentUser.BankAccount}</div>
+              <div className="text-xs text-gray-400 font-bold mb-1">连结卡: {currentUser.BankAccount}</div>
               <div className={`font-black text-xl ${parseFloat(fiatBalance) === 0 ? 'text-red-500' : 'text-gray-900'}`}>
                 {fiatBalance} <span className="text-sm font-semibold text-gray-500">{currentUser.FiatCurrency}</span>
               </div>
@@ -345,7 +352,6 @@ export default function BusinessPortal() {
       </nav>
 
       <main className="max-w-7xl mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8">
-        {/* 左侧：付款表单 */}
         <div className="w-full lg:w-1/3">
           <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
             <h3 className="font-extrabold text-xl mb-6 text-gray-800">{currentUser.Role === 'buyer' ? '新建国际汇款 / 采购担保' : '账户健康概览'}</h3>
@@ -353,10 +359,10 @@ export default function BusinessPortal() {
             {currentUser.Role === 'buyer' ? (
               <div className="space-y-5">
                 <div>
-                  <label className="block text-xs font-bold text-gray-500 mb-2 uppercase">选择收款企业</label>
+                  <label className="block text-xs font-bold text-gray-500 mb-2 uppercase">收款企业 (及结算货币)</label>
                   <select value={selectedSellerId} onChange={e => setSelectedSellerId(e.target.value)} className="w-full border-2 border-gray-100 rounded-xl p-3 text-sm text-gray-800 bg-gray-50 focus:bg-white focus:border-blue-400 transition">
-                    <option value="">-- 请选择国内供应商 --</option>
-                    {users.filter(u => u.Role === 'seller').map(s => <option key={s.ID} value={s.ID}>{s.CompanyName}</option>)}
+                    <option value="">-- 请选择供应商 --</option>
+                    {users.filter(u => u.Role === 'seller').map(s => <option key={s.ID} value={s.ID}>{s.CompanyName} ({s.FiatCurrency})</option>)}
                   </select>
                 </div>
                 <div>
@@ -365,29 +371,37 @@ export default function BusinessPortal() {
                     {DESTINATIONS.map(d => <option key={d} value={d}>{d}</option>)}
                   </select>
                 </div>
-                <div>
-                  <label className="block text-xs font-bold text-gray-500 mb-2 uppercase">付款金额 ({currentUser.FiatCurrency})</label>
-                  <div className="relative">
-                    <span className="absolute left-4 top-3 text-gray-400 font-bold">{currentUser.FiatCurrency}</span>
-                    <input type="number" value={payAmount} onChange={e => setPayAmount(e.target.value)} className="w-full border-2 border-gray-100 rounded-xl p-3 pl-14 text-lg font-bold text-gray-900 bg-gray-50 focus:bg-white focus:border-blue-400 transition" placeholder="0.00" />
+                
+                {/* 动态汇率换算引擎 UI */}
+                <div className="bg-blue-50/50 p-4 rounded-xl border border-blue-100">
+                  <label className="block text-xs font-bold text-blue-800 mb-2 uppercase">收款方索要金额 ({sellerCurrency})</label>
+                  <div className="relative mb-3">
+                    <span className="absolute left-4 top-3 text-gray-400 font-bold">{sellerCurrency}</span>
+                    <input type="number" value={payAmount} onChange={e => setPayAmount(e.target.value)} className="w-full border-2 border-white rounded-xl p-3 pl-16 text-lg font-bold text-gray-900 bg-white focus:border-blue-400 transition shadow-sm" placeholder="0.00" />
                   </div>
+                  {payAmount && (
+                    <div className="text-xs text-gray-600 bg-white p-2 rounded border border-dashed border-gray-300">
+                      <p className="flex justify-between"><span>实时汇率换算:</span> <span>1 {sellerCurrency} ≈ {(buyerRate/sellerRate).toFixed(4)} {currentUser.FiatCurrency}</span></p>
+                      <p className="flex justify-between font-bold text-red-600 mt-1 border-t pt-1"><span>系统将扣除您:</span> <span>- {buyerFiatRequired.toFixed(2)} {currentUser.FiatCurrency}</span></p>
+                    </div>
+                  )}
                 </div>
 
-                <div className="pt-4">
+                <div className="pt-2">
                   <label className="block text-xs font-bold text-gray-500 mb-3 uppercase">选择结算网络通道</label>
                   <div className="grid grid-cols-2 gap-3">
                     <div onClick={() => setPaymentType('ESCROW')} className={`cursor-pointer border-2 rounded-xl p-3 transition ${paymentType === 'ESCROW' ? 'border-blue-500 bg-blue-50' : 'border-gray-100 hover:border-gray-300'}`}>
                       <p className="font-bold text-sm text-blue-900 mb-1">🛡️ 担保支付</p>
-                      <p className="text-[10px] text-gray-500 leading-tight">资金由智能合约托管。发货前可撤销。确认收货后清算。</p>
+                      <p className="text-[10px] text-gray-500 leading-tight">发货前可撤销。收货后清算。</p>
                     </div>
                     <div onClick={() => setPaymentType('DIRECT')} className={`cursor-pointer border-2 rounded-xl p-3 transition ${paymentType === 'DIRECT' ? 'border-amber-500 bg-amber-50' : 'border-gray-100 hover:border-gray-300'}`}>
                       <p className="font-bold text-sm text-amber-900 mb-1">⚡ P2P 直汇</p>
-                      <p className="text-[10px] text-gray-500 leading-tight">资金瞬间到达对方账户。<strong className="text-red-500">不可撤销，不可退款。</strong></p>
+                      <p className="text-[10px] text-gray-500 leading-tight">瞬间到账。<strong className="text-red-500">不可退款。</strong></p>
                     </div>
                   </div>
                 </div>
 
-                <button onClick={handlePayment} disabled={loading} className={`w-full text-white font-bold py-4 rounded-xl mt-4 transition shadow-lg disabled:opacity-50 ${paymentType === 'ESCROW' ? 'bg-blue-600 hover:bg-blue-700 shadow-blue-600/30' : 'bg-amber-600 hover:bg-amber-700 shadow-amber-600/30'}`}>
+                <button onClick={handlePayment} disabled={loading || !payAmount} className={`w-full text-white font-bold py-4 rounded-xl mt-4 transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed ${paymentType === 'ESCROW' ? 'bg-blue-600 hover:bg-blue-700 shadow-blue-600/30' : 'bg-amber-600 hover:bg-amber-700 shadow-amber-600/30'}`}>
                   {loading ? '安全网络处理中...' : (paymentType === 'ESCROW' ? '生成担保合约并锁款' : '确认无误，立即转账')}
                 </button>
               </div>
@@ -395,10 +409,11 @@ export default function BusinessPortal() {
               <div className="space-y-4 text-sm text-gray-600">
                 <div className="bg-emerald-50 p-5 rounded-xl border border-emerald-100">
                   <h4 className="font-bold text-emerald-800 mb-2 text-base">🟢 账户状态正常</h4>
-                  <p className="text-emerald-700 leading-relaxed mb-3">您的企业已通过高级 KYC 认证。支持接收 P2P 直汇与智能合约担保订单。</p>
+                  <p className="text-emerald-700 leading-relaxed mb-3">您的企业已通过高级 KYC 认证。支持接收全球多种法币的担保订单。</p>
                   <ul className="list-disc pl-5 text-emerald-600 space-y-1">
                     <li>收到担保订单后，请放心发货。</li>
                     <li>一旦录入运单，买家将<strong className="text-red-500 underline">无法撤销</strong>付款。</li>
+                    <li>买家确认收货，系统自动按汇率结算为您的本国法币 ({currentUser.FiatCurrency})。</li>
                   </ul>
                 </div>
               </div>
@@ -406,7 +421,6 @@ export default function BusinessPortal() {
           </div>
         </div>
 
-        {/* 右侧：财务流水与状态追踪 */}
         <div className="w-full lg:w-2/3">
           <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 min-h-[600px]">
             <div className="flex justify-between items-center mb-8 border-b pb-4">
@@ -416,9 +430,12 @@ export default function BusinessPortal() {
             
             <div className="space-y-5">
               {orders.length === 0 && <div className="text-center py-20 text-gray-300 font-bold text-lg">企业暂无业务流水</div>}
-              {orders.map(order => (
+              {orders.map(order => {
+                 // 核心：卖家和买家看到的金额不一样！买家看自己付的法币，卖家看自己收的法币。
+                 const displayAmount = currentUser.Role === 'buyer' ? order.FiatAmount : (order.Amount * FIAT_RATES[currentUser.FiatCurrency]);
+                 
+                 return (
                 <div key={order.ID} className={`border-2 rounded-2xl p-6 transition-all ${order.Status === 'REVOKED' ? 'border-gray-100 bg-gray-50 opacity-70' : 'border-gray-100 bg-white hover:border-blue-200 hover:shadow-lg'}`}>
-                  
                   <div className="flex justify-between items-start mb-4">
                     <div>
                       <div className="flex items-center space-x-3 mb-2">
@@ -427,27 +444,21 @@ export default function BusinessPortal() {
                         {order.PaymentType === 'ESCROW' && <span className="bg-blue-100 text-blue-800 text-[10px] font-black px-2 py-0.5 rounded-sm border border-blue-200 uppercase tracking-widest">智能担保</span>}
                       </div>
                       
-                      {/* 订单状态徽章 */}
                       <div className="mt-2">
-                        {order.Status === 'PAID' && <span className="text-yellow-600 font-bold text-sm flex items-center"><span className="w-2 h-2 rounded-full bg-yellow-500 mr-2 animate-pulse"></span> 资金已入库 (等待发货)</span>}
+                        {order.Status === 'PAID' && <span className="text-yellow-600 font-bold text-sm flex items-center"><span className="w-2 h-2 rounded-full bg-yellow-500 mr-2 animate-pulse"></span> 资金已托管 (等待发货)</span>}
                         {order.Status === 'SHIPPED' && <span className="text-blue-600 font-bold text-sm flex items-center"><span className="w-2 h-2 rounded-full bg-blue-500 mr-2"></span> 国际物流运输中</span>}
                         {order.Status === 'COMPLETED' && <span className="text-emerald-600 font-bold text-sm flex items-center"><span className="w-2 h-2 rounded-full bg-emerald-500 mr-2"></span> 交易圆满闭环 (款项已结算)</span>}
                         {order.Status === 'REVOKED' && <span className="text-gray-500 font-bold text-sm flex items-center"><span className="w-2 h-2 rounded-full bg-gray-400 mr-2"></span> 交易已撤销 (资金已退回)</span>}
                       </div>
                     </div>
                     
-                    {/* 金额显示：如果不是当前用户的法币，显示双币种对照 */}
                     <div className="text-right">
                       <div className={`text-2xl font-black ${order.Status === 'REVOKED' ? 'text-gray-400 line-through' : 'text-gray-900'}`}>
-                        {currentUser.FiatCurrency === order.Currency ? (
-                          <span>{order.FiatAmount.toLocaleString()} <span className="text-sm font-bold text-gray-500">{order.Currency}</span></span>
-                        ) : (
-                          <span>{order.Amount.toLocaleString()} <span className="text-sm font-bold text-gray-500">BUSD</span></span>
-                        )}
+                          {displayAmount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} <span className="text-sm font-bold text-gray-500">{currentUser.FiatCurrency}</span>
                       </div>
-                      {currentUser.FiatCurrency !== order.Currency && order.Status !== 'REVOKED' && (
-                        <div className="text-xs text-emerald-600 font-bold mt-1">
-                          ≈ {(order.Amount * FIAT_RATES[currentUser.FiatCurrency]).toLocaleString()} {currentUser.FiatCurrency}
+                      {currentUser.Role === 'buyer' && order.Status !== 'REVOKED' && (
+                        <div className="text-xs text-gray-500 font-bold mt-1">
+                          (卖家实收: {(order.Amount * FIAT_RATES["CNY"]).toLocaleString()} CNY)
                         </div>
                       )}
                     </div>
@@ -456,12 +467,12 @@ export default function BusinessPortal() {
                   <div className="flex justify-between items-end mt-6 pt-5 border-t border-gray-50">
                     <div className="text-xs text-gray-400 space-y-2">
                       <p className="flex items-center"><span className="w-5 h-5 rounded bg-gray-100 flex items-center justify-center mr-2">📍</span> <span className="font-bold text-gray-600">{order.Origin} &rarr; {order.Destination}</span></p>
-                      <p className="flex items-center"><span className="w-5 h-5 rounded bg-gray-100 flex items-center justify-center mr-2">🧾</span> 银行清算回单: <span className="font-mono text-gray-500 ml-1">TX-{order.TxHash.substring(2, 14).toUpperCase()}</span></p>
+                      <p className="flex items-center"><span className="w-5 h-5 rounded bg-gray-100 flex items-center justify-center mr-2">🧾</span> 链上清算哈希: <span className="font-mono text-gray-500 ml-1">TX-{order.TxHash.substring(2, 14).toUpperCase()}</span></p>
                     </div>
 
-                    {/* ======= 强大的状态机交互按钮 ======= */}
                     <div className="flex space-x-3">
-                      {(order.Status === 'SHIPPED' || order.Status === 'COMPLETED') && order.LogisticsRoute && (
+                      {/* 【修复】增加非空校验，避免 JSON.parse 崩溃 */}
+                      {(order.Status === 'SHIPPED' || order.Status === 'COMPLETED') && order.LogisticsRoute && order.LogisticsRoute.length > 5 && (
                         <button onClick={() => openTracking(order.LogisticsRoute)} className="px-5 py-2.5 bg-gray-100 text-gray-700 text-sm font-bold rounded-xl hover:bg-gray-200 transition">
                           📍 展开物流追踪
                         </button>
@@ -487,13 +498,12 @@ export default function BusinessPortal() {
                     </div>
                   </div>
                 </div>
-              ))}
+              )})}
             </div>
           </div>
         </div>
       </main>
 
-      {/* 物流追踪高雅弹窗 */}
       {trackingRoute && (
         <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl relative transform transition-all">
