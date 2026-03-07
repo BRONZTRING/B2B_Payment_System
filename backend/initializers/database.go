@@ -1,28 +1,28 @@
 package initializers
 
 import (
-	"fmt"
+	"b2b_backend/models"
 	"log"
-	"os"
 
-	"gorm.io/driver/postgres"
+	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 var DB *gorm.DB
 
-func ConnectToDB() {
+func ConnectDatabase() {
 	var err error
-	// 默认连接本地开发环境（Docker 暴露出的 5432 端口）
-	dsn := os.Getenv("DB_DSN")
-	if dsn == "" {
-		dsn = "host=localhost user=user password=password dbname=b2b_payment_db port=5432 sslmode=disable TimeZone=Asia/Shanghai"
-	}
+	// 连接 SQLite，并静音繁琐的默认 SQL 日志
+	DB, err = gorm.Open(sqlite.Open("b2b_ledger.db"), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Silent),
+	})
 
-	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		log.Fatal("Failed to connect to database:", err)
+		log.Fatal("❌ 数据库连接失败: ", err)
 	}
 
-	fmt.Println("🚀 Connected to PostgreSQL database successfully!")
+	// 自动同步 V11.0 模型
+	DB.AutoMigrate(&models.User{}, &models.Order{})
+	log.Println("✅ 数据库连接成功并完成模型同步")
 }

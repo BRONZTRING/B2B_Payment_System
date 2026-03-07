@@ -1,0 +1,501 @@
+﻿OrderID,Buyer,Seller,Amount_BUSD,Destination,RiskScore,IsFlagged,Latency_Sec,Status
+TEST-BOT-AAB90E19,Volga Trade Importer 017,Osaka Parts Factory 007,11024.304671303149,"Singapore, Singapore",0.3817,False,0.08092403411865234,SUCCESS
+TEST-BOT-020BD98D,Shenzhen Innovation Procurement 046,Siberian Tech Manufacturing 016,24147.71319189472,"Singapore, Singapore",0.3353,False,0.06820178031921387,SUCCESS
+TEST-BOT-B53B468F,London General Sourcing 036,Bavaria Auto Factory 019,34223.02750172242,"Los Angeles, USA",0.3532,False,0.07039499282836914,SUCCESS
+TEST-BOT-BEF0B7C3,Bavaria Auto Procurement 038,Texas Tech Manufacturing 008,420319.6122056693,Unknown Dark Web Node,0.5084,True,0.20489287376403809,SUCCESS
+TEST-BOT-C477BC49,California Cyber Importer 045,Berlin Industrial Supplier 021,18511.172667154642,"Hamburg, Germany",0.3607,False,0.5264637470245361,SUCCESS
+TEST-BOT-7DF12FDE,Volga Trade Importer 049,Bavaria Auto Factory 035,14379.265213760837,"Hamburg, Germany",0.3741,False,0.008389711380004883,SUCCESS
+TEST-BOT-BBACFD59,Moscow Heavy Ind. Procurement 050,Bavaria Auto Factory 035,8464.871822778423,"Los Angeles, USA",0.431,False,0.18973493576049805,SUCCESS
+TEST-BOT-43392A4B,NY Global LLC Sourcing 028,Texas Tech Manufacturing 008,22061.65089830065,"Singapore, Singapore",0.3466,False,0.006263017654418945,SUCCESS
+TEST-BOT-A86116D3,Oxford Textiles Importer 005,London General Supplier 001,76159.36734459749,"Singapore, Singapore",0.5084,True,0.009468555450439453,SUCCESS
+TEST-BOT-382A7CAF,California Cyber Importer 029,Moscow Heavy Ind. Factory 015,306096.95055086014,"Pyongyang, DPRK (Sanctioned)",0.5084,True,0.012107372283935547,SUCCESS
+TEST-BOT-AE5E8D41,Berlin Industrial Sourcing 008,Guangzhou Manufacturing Manufacturing 012,19763.56016128659,"Rotterdam, Netherlands",0.3539,False,0.010344982147216797,SUCCESS
+TEST-BOT-769D8306,Oxford Textiles Importer 037,Shanghai Trade Supplier 013,67278.84758226242,"Hamburg, Germany",0.5084,True,0.011126279830932617,SUCCESS
+TEST-BOT-18A9A2C6,Siberian Tech Buyer Group 003,Oxford Textiles Exporter 034,39354.45719498519,"Hamburg, Germany",0.3769,False,0.007919073104858398,SUCCESS
+TEST-BOT-7BB96406,Texas Tech Buyer Group 011,Guangzhou Manufacturing Manufacturing 028,48986.25576941582,"Dubai, UAE",0.4008,False,0.010781526565551758,SUCCESS
+TEST-BOT-7EAE6388,Paris Luxury Buyer Group 007,Paris Luxury Manufacturing 036,40614.3345474242,"Hamburg, Germany",0.3771,False,0.012202024459838867,SUCCESS
+TEST-BOT-97E36E09,Texas Tech Buyer Group 027,Berlin Industrial Supplier 021,36328.110038926825,"Dubai, UAE",0.3591,False,0.0064089298248291016,SUCCESS
+TEST-BOT-D8F6A83F,Shenzhen Innovation Procurement 014,Tokyo Electronics Exporter 022,49675.15072194615,"Dubai, UAE",0.3924,False,0.005424976348876953,SUCCESS
+TEST-BOT-0950CD48,Moscow Heavy Ind. Procurement 034,Shanghai Trade Supplier 013,413317.8991196353,"Pyongyang, DPRK (Sanctioned)",0.5084,True,0.007477521896362305,SUCCESS
+TEST-BOT-9AA9DAC8,Siberian Tech Buyer Group 035,Bavaria Auto Factory 019,27633.09153608901,"Los Angeles, USA",0.3116,False,0.008461713790893555,SUCCESS
+TEST-BOT-5AA501E0,Guangzhou Manufacturing Buyer Group 047,Shanghai Trade Supplier 013,76050.21129768665,"Rotterdam, Netherlands",0.5084,True,0.013447761535644531,SUCCESS
+TEST-BOT-89F7013E,Tokyo Electronics Importer 009,Shanghai Trade Supplier 013,26116.427715805086,"Rotterdam, Netherlands",0.3264,False,0.01538228988647461,SUCCESS
+TEST-BOT-3918A9A8,Osaka Parts Procurement 026,Moscow Heavy Ind. Factory 047,16293.768506912258,"Singapore, Singapore",0.3657,False,0.009544849395751953,SUCCESS
+TEST-BOT-DD73260F,Shenzhen Innovation Procurement 030,Oxford Textiles Exporter 034,42242.15854463067,"Hamburg, Germany",0.3832,False,0.0066051483154296875,SUCCESS
+TEST-BOT-1039A6BC,London General Sourcing 020,Siberian Tech Manufacturing 016,72759.00222060275,"Singapore, Singapore",0.5084,True,0.0077402591705322266,SUCCESS
+TEST-BOT-BF5AB8EE,Moscow Heavy Ind. Procurement 018,Moscow Heavy Ind. Factory 047,35258.42573421212,"Hamburg, Germany",0.357,False,0.009639978408813477,SUCCESS
+TEST-BOT-5348D1F2,Volga Trade Importer 001,NY Global LLC Supplier 041,30965.173990596944,"Dubai, UAE",0.3167,False,0.006642341613769531,SUCCESS
+TEST-BOT-E10E1C7B,London General Sourcing 036,London General Supplier 017,301217.02078098553,"Pyongyang, DPRK (Sanctioned)",0.5084,True,0.007919549942016602,SUCCESS
+TEST-BOT-3F2ECF7B,London General Sourcing 004,Bavaria Auto Factory 035,12815.998539131942,"Dubai, UAE",0.3757,False,0.008409738540649414,SUCCESS
+TEST-BOT-2137A6FE,Guangzhou Manufacturing Buyer Group 015,Shanghai Trade Supplier 029,76895.77611057529,"Dubai, UAE",0.5084,True,0.007882833480834961,SUCCESS
+TEST-BOT-2262DDAC,Tokyo Electronics Importer 025,NY Global LLC Supplier 009,25588.90418323433,"Dubai, UAE",0.3291,False,0.008854389190673828,SUCCESS
+TEST-BOT-101923A6,Osaka Parts Procurement 026,Tokyo Electronics Exporter 038,68265.44538502808,"Los Angeles, USA",0.5084,True,0.009309530258178711,SUCCESS
+TEST-BOT-6443E5C3,Siberian Tech Buyer Group 019,Shanghai Trade Supplier 013,17829.614262470415,"Dubai, UAE",0.362,False,0.008435249328613281,SUCCESS
+TEST-BOT-20247982,Volga Trade Importer 017,Volga Trade Exporter 046,344899.28589453903,Unknown Dark Web Node,0.5084,True,0.008652925491333008,SUCCESS
+TEST-BOT-D9124862,Bavaria Auto Procurement 006,Osaka Parts Factory 007,49784.378636382906,"Dubai, UAE",0.3924,False,0.08375787734985352,SUCCESS
+TEST-BOT-9718ABB8,Siberian Tech Buyer Group 003,Moscow Heavy Ind. Factory 047,17252.162271297446,"Rotterdam, Netherlands",0.362,False,0.008780717849731445,SUCCESS
+TEST-BOT-B154FD1E,Oxford Textiles Importer 037,Guangzhou Manufacturing Manufacturing 028,9997.391298023562,"Hamburg, Germany",0.3849,False,0.005383491516113281,SUCCESS
+TEST-BOT-4A57CF04,Paris Luxury Buyer Group 007,Bavaria Auto Factory 003,64991.13054114537,"Los Angeles, USA",0.5084,True,0.008397102355957031,SUCCESS
+TEST-BOT-5F89D290,Volga Trade Importer 049,Texas Tech Manufacturing 008,25568.074209134065,"Hamburg, Germany",0.3291,False,0.00875997543334961,SUCCESS
+TEST-BOT-2CEE0D19,Texas Tech Buyer Group 043,Bavaria Auto Factory 019,19368.709432544216,"Rotterdam, Netherlands",0.3565,False,0.005490779876708984,SUCCESS
+TEST-BOT-7F4E70F7,Shenzhen Innovation Procurement 030,Texas Tech Manufacturing 008,252908.2490241335,Unknown Dark Web Node,0.5084,True,0.0072901248931884766,SUCCESS
+TEST-BOT-EF2B921B,Shanghai Trade Sourcing 016,Guangzhou Manufacturing Manufacturing 044,45978.32167805675,"Singapore, Singapore",0.3983,False,0.00862574577331543,SUCCESS
+TEST-BOT-18197ED6,California Cyber Importer 045,Shenzhen Innovation Factory 027,52786.870769279456,"Singapore, Singapore",0.415,False,0.0065305233001708984,SUCCESS
+TEST-BOT-125A38F4,Shanghai Trade Sourcing 048,NY Global LLC Supplier 025,35453.634317513104,"Los Angeles, USA",0.357,False,0.005396842956542969,SUCCESS
+TEST-BOT-0FAA0F1F,Guangzhou Manufacturing Buyer Group 031,Shanghai Trade Supplier 045,78016.58504668178,"Rotterdam, Netherlands",0.5084,True,0.00803065299987793,SUCCESS
+TEST-BOT-AB37E626,London General Sourcing 004,Oxford Textiles Exporter 018,27373.31704943092,"Singapore, Singapore",0.3108,False,0.008325815200805664,SUCCESS
+TEST-BOT-6F129389,Shenzhen Innovation Procurement 014,Tokyo Electronics Exporter 022,363895.6365840585,Unknown Dark Web Node,0.5084,True,0.007360935211181641,SUCCESS
+TEST-BOT-0EDDE535,Volga Trade Importer 001,Shenzhen Innovation Factory 011,41913.70906929588,"Rotterdam, Netherlands",0.3813,False,0.006087779998779297,SUCCESS
+TEST-BOT-D2D9B8EA,Moscow Heavy Ind. Procurement 050,Moscow Heavy Ind. Factory 015,276643.365316094,"Pyongyang, DPRK (Sanctioned)",0.5084,True,0.01603412628173828,SUCCESS
+TEST-BOT-5E48A9A2,Shanghai Trade Sourcing 032,NY Global LLC Supplier 025,51008.745818354386,"Dubai, UAE",0.3996,False,0.4389529228210449,SUCCESS
+TEST-BOT-0EE4D92F,Osaka Parts Procurement 010,Paris Luxury Manufacturing 004,294011.22444822884,"Pyongyang, DPRK (Sanctioned)",0.5084,True,0.01001429557800293,SUCCESS
+TEST-BOT-E800264C,Paris Luxury Buyer Group 007,NY Global LLC Supplier 041,60156.89993373444,"Singapore, Singapore",0.5084,True,0.009705781936645508,SUCCESS
+TEST-BOT-11C086E5,NY Global LLC Sourcing 044,Osaka Parts Factory 039,76999.89504263815,"Dubai, UAE",0.5084,True,0.04017376899719238,SUCCESS
+TEST-BOT-314AB158,California Cyber Importer 045,Bavaria Auto Factory 003,65863.73039910897,"Rotterdam, Netherlands",0.5084,True,0.0067217350006103516,SUCCESS
+TEST-BOT-3D82DF6F,Moscow Heavy Ind. Procurement 034,NY Global LLC Supplier 025,44972.025018173656,"Dubai, UAE",0.3972,False,0.009540081024169922,SUCCESS
+TEST-BOT-58174ADC,Guangzhou Manufacturing Buyer Group 047,Berlin Industrial Supplier 005,68459.01604786396,"Los Angeles, USA",0.5084,True,0.010457038879394531,SUCCESS
+TEST-BOT-B689ABE1,Tokyo Electronics Importer 009,Paris Luxury Manufacturing 004,73852.67237436312,"Rotterdam, Netherlands",0.5084,True,0.010286331176757812,SUCCESS
+TEST-BOT-73D6DC34,Bavaria Auto Procurement 038,Osaka Parts Factory 039,70668.27065613946,"Dubai, UAE",0.5084,True,0.011848926544189453,SUCCESS
+TEST-BOT-B2D0A8E3,Volga Trade Importer 017,Texas Tech Manufacturing 040,20953.402748446264,"Dubai, UAE",0.3538,False,0.023593664169311523,SUCCESS
+TEST-BOT-47A4299D,Berlin Industrial Sourcing 008,Guangzhou Manufacturing Manufacturing 044,13754.691761574884,"Hamburg, Germany",0.378,False,0.008730411529541016,SUCCESS
+TEST-BOT-788F8CAA,Bavaria Auto Procurement 006,Paris Luxury Manufacturing 004,76685.64548702838,"Rotterdam, Netherlands",0.5084,True,0.008474588394165039,SUCCESS
+TEST-BOT-85B01164,Guangzhou Manufacturing Buyer Group 047,Tokyo Electronics Exporter 038,46666.99396425819,"Dubai, UAE",0.3972,False,0.06134486198425293,SUCCESS
+TEST-BOT-658B5AB1,Tokyo Electronics Importer 041,Bavaria Auto Factory 035,20886.904588993217,"Singapore, Singapore",0.3538,False,0.004672050476074219,SUCCESS
+TEST-BOT-DA8EFE06,Guangzhou Manufacturing Buyer Group 031,Shenzhen Innovation Factory 043,69049.51317097011,"Dubai, UAE",0.5084,True,0.008896112442016602,SUCCESS
+TEST-BOT-B503EEAE,Tokyo Electronics Importer 025,Texas Tech Manufacturing 024,34907.872975555496,"Singapore, Singapore",0.3572,False,0.00946497917175293,SUCCESS
+TEST-BOT-AFD630FF,London General Sourcing 020,Guangzhou Manufacturing Manufacturing 028,8504.80064286428,"Dubai, UAE",0.431,False,0.005200862884521484,SUCCESS
+TEST-BOT-24918468,Osaka Parts Procurement 042,Osaka Parts Factory 023,79701.82765484106,"Rotterdam, Netherlands",0.5084,True,0.0074121952056884766,SUCCESS
+TEST-BOT-83CBC9A1,California Cyber Importer 029,Texas Tech Manufacturing 040,11996.006528762598,"Singapore, Singapore",0.3712,False,0.00796818733215332,SUCCESS
+TEST-BOT-F094F632,Moscow Heavy Ind. Procurement 018,Siberian Tech Manufacturing 032,40171.641678696695,"Los Angeles, USA",0.3738,False,0.006215810775756836,SUCCESS
+TEST-BOT-E8D3D7DA,Texas Tech Buyer Group 027,London General Supplier 017,63048.68758416699,"Hamburg, Germany",0.5084,True,0.009436607360839844,SUCCESS
+TEST-BOT-A84B0465,Berlin Industrial Sourcing 040,Paris Luxury Manufacturing 004,68831.42537600367,"Hamburg, Germany",0.5084,True,0.012452125549316406,SUCCESS
+TEST-BOT-F263A99D,Siberian Tech Buyer Group 019,NY Global LLC Supplier 041,77883.47070275362,"Hamburg, Germany",0.5084,True,0.010219097137451172,SUCCESS
+TEST-BOT-15927DA7,Guangzhou Manufacturing Buyer Group 015,Shenzhen Innovation Factory 043,483211.76557145827,"Pyongyang, DPRK (Sanctioned)",0.5084,True,0.010497808456420898,SUCCESS
+TEST-BOT-AB934FCB,Shenzhen Innovation Procurement 030,Guangzhou Manufacturing Manufacturing 012,24854.454418443078,"Dubai, UAE",0.334,False,0.014657974243164062,SUCCESS
+TEST-BOT-FE4392B4,Bavaria Auto Procurement 006,Shenzhen Innovation Factory 011,13142.781557136816,"Los Angeles, USA",0.3759,False,0.5344338417053223,SUCCESS
+TEST-BOT-E3F9E3A0,Tokyo Electronics Importer 025,Paris Luxury Manufacturing 036,77123.06154016669,"Rotterdam, Netherlands",0.5084,True,0.0076427459716796875,SUCCESS
+TEST-BOT-7D8166F2,Berlin Industrial Sourcing 008,NY Global LLC Supplier 009,33393.99786455184,"Hamburg, Germany",0.3483,False,0.009356975555419922,SUCCESS
+TEST-BOT-C24BA188,Bavaria Auto Procurement 006,Texas Tech Manufacturing 024,78987.88649152662,"Singapore, Singapore",0.5084,True,0.010280847549438477,SUCCESS
+TEST-BOT-BE1BB744,NY Global LLC Sourcing 028,Volga Trade Exporter 046,76029.48645547141,"Rotterdam, Netherlands",0.5084,True,0.010267019271850586,SUCCESS
+TEST-BOT-53673CD0,Osaka Parts Procurement 026,London General Supplier 049,75366.98992442875,"Singapore, Singapore",0.5084,True,0.009793519973754883,SUCCESS
+TEST-BOT-2402B023,Paris Luxury Buyer Group 023,Tokyo Electronics Exporter 006,45899.08391939443,"Dubai, UAE",0.3983,False,0.008208036422729492,SUCCESS
+TEST-BOT-590F809C,Bavaria Auto Procurement 038,Paris Luxury Manufacturing 036,72454.4163416479,"Los Angeles, USA",0.5084,True,0.00818777084350586,SUCCESS
+TEST-BOT-5295F899,Volga Trade Importer 001,Bavaria Auto Factory 035,47390.9010934036,"Hamburg, Germany",0.3995,False,0.008582115173339844,SUCCESS
+TEST-BOT-85A6BD4E,Guangzhou Manufacturing Buyer Group 031,Texas Tech Manufacturing 024,34342.25903979891,"Rotterdam, Netherlands",0.3544,False,0.006209850311279297,SUCCESS
+TEST-BOT-74816AC8,Siberian Tech Buyer Group 035,Shenzhen Innovation Factory 011,50547.70350769938,"Los Angeles, USA",0.3987,False,0.007741212844848633,SUCCESS
+TEST-BOT-03F6D061,Bavaria Auto Procurement 006,Shenzhen Innovation Factory 043,15401.594493796876,"Dubai, UAE",0.3667,False,0.008199214935302734,SUCCESS
+TEST-BOT-4A938723,Moscow Heavy Ind. Procurement 002,Tokyo Electronics Exporter 038,50457.020950223974,"Los Angeles, USA",0.3977,False,0.005282402038574219,SUCCESS
+TEST-BOT-2D20E3B7,Siberian Tech Buyer Group 003,Volga Trade Exporter 014,439320.6214957879,"Pyongyang, DPRK (Sanctioned)",0.5084,True,0.007521390914916992,SUCCESS
+TEST-BOT-9B728C7A,Volga Trade Importer 033,Oxford Textiles Exporter 034,468339.294000677,"Pyongyang, DPRK (Sanctioned)",0.5084,True,0.014749288558959961,SUCCESS
+TEST-BOT-249CE5A3,Moscow Heavy Ind. Procurement 018,California Cyber Exporter 042,14579.752559548966,"Hamburg, Germany",0.3741,False,0.004641532897949219,SUCCESS
+TEST-BOT-0047FBB6,California Cyber Importer 029,California Cyber Exporter 010,7655.478432890721,"Rotterdam, Netherlands",0.4611,False,0.00841069221496582,SUCCESS
+TEST-BOT-919021DE,Osaka Parts Procurement 026,Volga Trade Exporter 014,66851.5901974543,"Rotterdam, Netherlands",0.5084,True,0.011207103729248047,SUCCESS
+TEST-BOT-70D2EDEF,Oxford Textiles Importer 005,Tokyo Electronics Exporter 038,69039.37133467456,"Los Angeles, USA",0.5084,True,0.015355110168457031,SUCCESS
+TEST-BOT-16B82B85,California Cyber Importer 013,Siberian Tech Manufacturing 048,40046.78964832757,"Los Angeles, USA",0.3738,False,0.040073394775390625,SUCCESS
+TEST-BOT-3830C194,Volga Trade Importer 033,Oxford Textiles Exporter 034,72163.09195209174,"Singapore, Singapore",0.5084,True,0.007161140441894531,SUCCESS
+TEST-BOT-67A9BA84,Shanghai Trade Sourcing 048,Shenzhen Innovation Factory 011,73239.56799094239,"Hamburg, Germany",0.5084,True,0.007534980773925781,SUCCESS
+TEST-BOT-0A5FBC66,Berlin Industrial Sourcing 024,NY Global LLC Supplier 025,21155.2457950494,"Los Angeles, USA",0.3536,False,0.0052967071533203125,SUCCESS
+TEST-BOT-8652067B,Guangzhou Manufacturing Buyer Group 015,Shenzhen Innovation Factory 043,60202.67084612685,"Los Angeles, USA",0.5084,True,0.00708770751953125,SUCCESS
+TEST-BOT-A7AA757B,Volga Trade Importer 049,Paris Luxury Manufacturing 036,19833.915678298137,"Singapore, Singapore",0.3539,False,0.008144855499267578,SUCCESS
+TEST-BOT-ABAC1F44,Moscow Heavy Ind. Procurement 002,Texas Tech Manufacturing 024,21316.550015439774,"Dubai, UAE",0.3545,False,0.008124589920043945,SUCCESS
+TEST-BOT-3739B341,London General Sourcing 004,London General Supplier 001,24001.024658858933,"Hamburg, Germany",0.3351,False,0.011864900588989258,SUCCESS
+TEST-BOT-A1F77C6A,Volga Trade Importer 049,Tokyo Electronics Exporter 006,53811.81148377116,"Singapore, Singapore",0.4219,False,0.4346771240234375,SUCCESS
+TEST-BOT-660A5DED,Oxford Textiles Importer 005,Moscow Heavy Ind. Factory 015,8072.159280499881,"Hamburg, Germany",0.4414,False,0.005794048309326172,SUCCESS
+TEST-BOT-CC9C46DB,London General Sourcing 020,Oxford Textiles Exporter 034,381638.60002955643,Unknown Dark Web Node,0.5084,True,0.009016752243041992,SUCCESS
+TEST-BOT-1EF5853B,Tokyo Electronics Importer 009,Volga Trade Exporter 046,46491.3513984,"Rotterdam, Netherlands",0.3962,False,0.0069637298583984375,SUCCESS
+TEST-BOT-4A9839D8,Shenzhen Innovation Procurement 014,Siberian Tech Manufacturing 048,41695.070819150875,"Dubai, UAE",0.379,False,0.007145404815673828,SUCCESS
+TEST-BOT-25E8A6C1,Texas Tech Buyer Group 043,Tokyo Electronics Exporter 006,38556.46747862759,"Hamburg, Germany",0.373,False,0.0067768096923828125,SUCCESS
+TEST-BOT-E0249B43,Shenzhen Innovation Procurement 046,Berlin Industrial Supplier 005,73133.00088329441,"Hamburg, Germany",0.5084,True,0.008720874786376953,SUCCESS
+TEST-BOT-231209F4,Oxford Textiles Importer 037,Oxford Textiles Exporter 018,77556.68958372703,"Singapore, Singapore",0.5084,True,0.010709762573242188,SUCCESS
+TEST-BOT-244F045A,Siberian Tech Buyer Group 035,London General Supplier 017,52418.62190816841,"Dubai, UAE",0.415,False,0.008025884628295898,SUCCESS
+TEST-BOT-232E0C36,NY Global LLC Sourcing 012,California Cyber Exporter 010,348730.2733564016,Unknown Dark Web Node,0.5084,True,0.011546611785888672,SUCCESS
+TEST-BOT-3981771D,Paris Luxury Buyer Group 007,Berlin Industrial Supplier 005,10593.198818085457,"Hamburg, Germany",0.3837,False,0.013929128646850586,SUCCESS
+TEST-BOT-D2AFA43A,Oxford Textiles Importer 021,NY Global LLC Supplier 025,13506.324883846553,"Dubai, UAE",0.376,False,0.007647991180419922,SUCCESS
+TEST-BOT-C2E8AE19,Texas Tech Buyer Group 043,Oxford Textiles Exporter 050,16310.568754435793,"Los Angeles, USA",0.3657,False,0.005532979965209961,SUCCESS
+TEST-BOT-BC42848C,Shanghai Trade Sourcing 048,California Cyber Exporter 026,23627.7228595408,"Los Angeles, USA",0.3358,False,0.01130986213684082,SUCCESS
+TEST-BOT-22A949EC,Osaka Parts Procurement 010,Shanghai Trade Supplier 013,43009.89423941361,"Los Angeles, USA",0.3897,False,0.012128353118896484,SUCCESS
+TEST-BOT-1DDE9755,NY Global LLC Sourcing 012,London General Supplier 033,57864.44224495137,"Rotterdam, Netherlands",0.4589,False,0.008272647857666016,SUCCESS
+TEST-BOT-4C074D33,Osaka Parts Procurement 042,Berlin Industrial Supplier 005,70048.39478534975,"Dubai, UAE",0.5084,True,0.010832548141479492,SUCCESS
+TEST-BOT-3EFD2422,Moscow Heavy Ind. Procurement 050,Berlin Industrial Supplier 021,51416.22061946604,"Singapore, Singapore",0.4028,False,0.008608102798461914,SUCCESS
+TEST-BOT-BE817334,Volga Trade Importer 049,California Cyber Exporter 010,53623.317141190455,"Rotterdam, Netherlands",0.4172,False,0.007895946502685547,SUCCESS
+TEST-BOT-F4B6A699,Shenzhen Innovation Procurement 030,London General Supplier 049,8108.952400388631,"Dubai, UAE",0.4402,False,0.008449316024780273,SUCCESS
+TEST-BOT-8E43E828,Paris Luxury Buyer Group 023,Shanghai Trade Supplier 029,14430.73133185069,"Los Angeles, USA",0.3741,False,0.00620269775390625,SUCCESS
+TEST-BOT-9C303331,Shanghai Trade Sourcing 016,Volga Trade Exporter 046,67102.51833019136,"Los Angeles, USA",0.5084,True,0.008479595184326172,SUCCESS
+TEST-BOT-F5C74551,Shenzhen Innovation Procurement 014,NY Global LLC Supplier 041,408556.1963971115,"Pyongyang, DPRK (Sanctioned)",0.5084,True,0.013177633285522461,SUCCESS
+TEST-BOT-80BDF211,Oxford Textiles Importer 005,London General Supplier 001,21684.330497391184,"Dubai, UAE",0.3501,False,0.0387425422668457,SUCCESS
+TEST-BOT-AB70B5C5,Tokyo Electronics Importer 041,Osaka Parts Factory 039,320490.77619636996,"Pyongyang, DPRK (Sanctioned)",0.5084,True,0.007565021514892578,SUCCESS
+TEST-BOT-1F0FCB6A,Oxford Textiles Importer 005,Osaka Parts Factory 039,396380.9252094829,Unknown Dark Web Node,0.5084,True,0.007185935974121094,SUCCESS
+TEST-BOT-34547CD9,Siberian Tech Buyer Group 035,Guangzhou Manufacturing Manufacturing 028,67413.48476668341,"Dubai, UAE",0.5084,True,0.007353782653808594,SUCCESS
+TEST-BOT-0D4A0C80,Guangzhou Manufacturing Buyer Group 031,Siberian Tech Manufacturing 032,47895.35181209012,"Dubai, UAE",0.3987,False,0.005019187927246094,SUCCESS
+TEST-BOT-85A27424,Moscow Heavy Ind. Procurement 002,Berlin Industrial Supplier 021,61204.65971871249,"Los Angeles, USA",0.5084,True,0.008548259735107422,SUCCESS
+TEST-BOT-412B77AE,Texas Tech Buyer Group 043,London General Supplier 049,21027.65809767873,"Los Angeles, USA",0.3538,False,0.009781360626220703,SUCCESS
+TEST-BOT-66BC3EC5,Bavaria Auto Procurement 038,Shenzhen Innovation Factory 043,486977.66813807265,"Pyongyang, DPRK (Sanctioned)",0.5084,True,0.010651350021362305,SUCCESS
+TEST-BOT-CA84CA2A,Moscow Heavy Ind. Procurement 018,Paris Luxury Manufacturing 020,9076.501668930654,"Hamburg, Germany",0.418,False,0.008303403854370117,SUCCESS
+TEST-BOT-74641F5D,Tokyo Electronics Importer 025,Bavaria Auto Factory 003,62395.29069777923,"Rotterdam, Netherlands",0.5084,True,0.007339954376220703,SUCCESS
+TEST-BOT-9BB34B66,Paris Luxury Buyer Group 039,Moscow Heavy Ind. Factory 031,55171.9666659078,"Dubai, UAE",0.4254,False,0.007848739624023438,SUCCESS
+TEST-BOT-AD480B3F,Tokyo Electronics Importer 025,Texas Tech Manufacturing 040,32951.47086641703,"Hamburg, Germany",0.3459,False,0.006311893463134766,SUCCESS
+TEST-BOT-F4101207,Shanghai Trade Sourcing 048,California Cyber Exporter 042,296245.3117191808,"Pyongyang, DPRK (Sanctioned)",0.5084,True,0.007670164108276367,SUCCESS
+TEST-BOT-342488E3,Shenzhen Innovation Procurement 046,Shenzhen Innovation Factory 043,54965.06637080414,"Dubai, UAE",0.4254,False,0.02627849578857422,SUCCESS
+TEST-BOT-2414F13C,Tokyo Electronics Importer 009,Guangzhou Manufacturing Manufacturing 044,9337.038549802635,"Rotterdam, Netherlands",0.4083,False,0.005535125732421875,SUCCESS
+TEST-BOT-F0157E19,Volga Trade Importer 001,Volga Trade Exporter 030,74076.16634629264,"Rotterdam, Netherlands",0.5084,True,0.013717174530029297,SUCCESS
+TEST-BOT-201D991F,Siberian Tech Buyer Group 019,Moscow Heavy Ind. Factory 047,62185.782566358306,"Rotterdam, Netherlands",0.5084,True,0.0609431266784668,SUCCESS
+TEST-BOT-A9AE661D,Osaka Parts Procurement 026,Osaka Parts Factory 023,13371.466302047926,"Rotterdam, Netherlands",0.3778,False,0.009660005569458008,SUCCESS
+TEST-BOT-3F79EE17,Oxford Textiles Importer 037,London General Supplier 001,332810.49862244236,"Pyongyang, DPRK (Sanctioned)",0.5084,True,0.013411283493041992,SUCCESS
+TEST-BOT-96331F30,Oxford Textiles Importer 037,Texas Tech Manufacturing 024,44709.07860033034,"Rotterdam, Netherlands",0.3974,False,0.004864931106567383,SUCCESS
+TEST-BOT-A67408A1,Siberian Tech Buyer Group 019,Texas Tech Manufacturing 024,8284.310945232794,"Singapore, Singapore",0.4346,False,0.00632166862487793,SUCCESS
+TEST-BOT-E144DD0B,Moscow Heavy Ind. Procurement 050,Shenzhen Innovation Factory 027,52766.92622748235,"Singapore, Singapore",0.415,False,0.00489044189453125,SUCCESS
+TEST-BOT-26CD5B76,Paris Luxury Buyer Group 023,Oxford Textiles Exporter 034,302509.19399108534,"Pyongyang, DPRK (Sanctioned)",0.5084,True,0.0069732666015625,SUCCESS
+TEST-BOT-81D93891,Moscow Heavy Ind. Procurement 050,Berlin Industrial Supplier 021,49796.48477903335,"Singapore, Singapore",0.3924,False,0.007746458053588867,SUCCESS
+TEST-BOT-D6E1EDA1,California Cyber Importer 045,Osaka Parts Factory 039,65390.88568351968,"Los Angeles, USA",0.5084,True,0.016569137573242188,SUCCESS
+TEST-BOT-5C82BA4B,Berlin Industrial Sourcing 040,Texas Tech Manufacturing 024,77309.36520146651,"Dubai, UAE",0.5084,True,0.008206605911254883,SUCCESS
+TEST-BOT-83C66AC8,Shanghai Trade Sourcing 032,California Cyber Exporter 010,36239.17107468503,"Hamburg, Germany",0.3591,False,0.01322174072265625,SUCCESS
+TEST-BOT-7E27945F,Bavaria Auto Procurement 006,Siberian Tech Manufacturing 016,46223.378040714466,"Dubai, UAE",0.3993,False,0.01653313636779785,SUCCESS
+TEST-BOT-BE8C8615,Moscow Heavy Ind. Procurement 018,Oxford Textiles Exporter 018,52967.67125919081,"Los Angeles, USA",0.4182,False,0.00478363037109375,SUCCESS
+TEST-BOT-60E14B0E,Moscow Heavy Ind. Procurement 002,Texas Tech Manufacturing 024,347441.963334976,"Pyongyang, DPRK (Sanctioned)",0.5084,True,0.06484174728393555,SUCCESS
+TEST-BOT-1C03C32F,Paris Luxury Buyer Group 007,California Cyber Exporter 042,59622.33085454553,"Singapore, Singapore",0.497,False,0.009266138076782227,SUCCESS
+TEST-BOT-0B853F4D,Guangzhou Manufacturing Buyer Group 015,NY Global LLC Supplier 025,70922.98208037774,"Dubai, UAE",0.5084,True,0.007421731948852539,SUCCESS
+TEST-BOT-598F5CDE,Moscow Heavy Ind. Procurement 034,London General Supplier 049,66857.48270836068,"Los Angeles, USA",0.5084,True,0.010052204132080078,SUCCESS
+TEST-BOT-AAF34439,Guangzhou Manufacturing Buyer Group 031,Moscow Heavy Ind. Factory 031,63586.68918140884,"Singapore, Singapore",0.5084,True,0.010410547256469727,SUCCESS
+TEST-BOT-5FB52962,London General Sourcing 004,Guangzhou Manufacturing Manufacturing 028,43495.3127979917,"Dubai, UAE",0.3907,False,0.008770465850830078,SUCCESS
+TEST-BOT-35B37638,Volga Trade Importer 017,London General Supplier 001,50255.73450623466,"Hamburg, Germany",0.3977,False,0.00616765022277832,SUCCESS
+TEST-BOT-DE71B1BD,Tokyo Electronics Importer 009,Osaka Parts Factory 023,46530.96391632451,"Rotterdam, Netherlands",0.3952,False,0.007279872894287109,SUCCESS
+TEST-BOT-EEB85451,NY Global LLC Sourcing 044,Oxford Textiles Exporter 034,47057.86998345222,"Singapore, Singapore",0.3995,False,0.00836038589477539,SUCCESS
+TEST-BOT-21EBAF30,London General Sourcing 020,Moscow Heavy Ind. Factory 047,53407.80458840745,"Rotterdam, Netherlands",0.4172,False,0.00839090347290039,SUCCESS
+TEST-BOT-E12E45AF,Texas Tech Buyer Group 027,Osaka Parts Factory 007,59191.17746545291,"Singapore, Singapore",0.4908,False,0.009595155715942383,SUCCESS
+TEST-BOT-5AC84BB8,Osaka Parts Procurement 042,Tokyo Electronics Exporter 038,52365.72118868376,"Singapore, Singapore",0.4129,False,0.008365869522094727,SUCCESS
+TEST-BOT-C9F195A9,Paris Luxury Buyer Group 007,London General Supplier 033,341455.80346352,Unknown Dark Web Node,0.5084,True,0.008099079132080078,SUCCESS
+TEST-BOT-D84AA4B2,Guangzhou Manufacturing Buyer Group 015,Guangzhou Manufacturing Manufacturing 044,76886.83927340563,"Los Angeles, USA",0.5084,True,0.9382355213165283,SUCCESS
+TEST-BOT-123BB0BF,Guangzhou Manufacturing Buyer Group 047,Shanghai Trade Supplier 013,7804.026036831833,"Dubai, UAE",0.4599,False,0.009917736053466797,SUCCESS
+TEST-BOT-ABCCA32D,Osaka Parts Procurement 010,Oxford Textiles Exporter 034,61943.01779505127,"Rotterdam, Netherlands",0.5084,True,0.013903379440307617,SUCCESS
+TEST-BOT-B21BC38C,California Cyber Importer 045,Oxford Textiles Exporter 034,42052.670681090545,"Dubai, UAE",0.3832,False,0.014011383056640625,SUCCESS
+TEST-BOT-AD448139,Texas Tech Buyer Group 043,NY Global LLC Supplier 025,346338.9553948224,"Pyongyang, DPRK (Sanctioned)",0.5084,True,0.00950169563293457,SUCCESS
+TEST-BOT-216CFCF7,Oxford Textiles Importer 037,Guangzhou Manufacturing Manufacturing 044,20119.71597205273,"Singapore, Singapore",0.3548,False,0.01037907600402832,SUCCESS
+TEST-BOT-E6D3C469,Volga Trade Importer 049,Oxford Textiles Exporter 018,25379.34843369565,"Dubai, UAE",0.3312,False,0.008831977844238281,SUCCESS
+TEST-BOT-AAC3957B,California Cyber Importer 029,Texas Tech Manufacturing 024,68146.87122358033,"Rotterdam, Netherlands",0.5084,True,0.008109807968139648,SUCCESS
+TEST-BOT-6E017B62,Guangzhou Manufacturing Buyer Group 031,Tokyo Electronics Exporter 038,21318.29524105415,"Rotterdam, Netherlands",0.3545,False,0.008928298950195312,SUCCESS
+TEST-BOT-8CBBD900,Oxford Textiles Importer 037,Shenzhen Innovation Factory 027,65017.20129291899,"Los Angeles, USA",0.5084,True,0.010354042053222656,SUCCESS
+TEST-BOT-B19A5114,Oxford Textiles Importer 021,Shanghai Trade Supplier 045,19288.348157349268,"Hamburg, Germany",0.3565,False,0.008295774459838867,SUCCESS
+TEST-BOT-4F5F2A7E,Shenzhen Innovation Procurement 014,Shanghai Trade Supplier 045,380600.65322565625,Unknown Dark Web Node,0.5084,True,0.008249998092651367,SUCCESS
+TEST-BOT-BFA17A61,Texas Tech Buyer Group 027,Bavaria Auto Factory 003,8400.614314343078,"Dubai, UAE",0.431,False,0.00824284553527832,SUCCESS
+TEST-BOT-4E5C39C5,Volga Trade Importer 049,Shenzhen Innovation Factory 027,425666.7309965027,Unknown Dark Web Node,0.5084,True,0.010691642761230469,SUCCESS
+TEST-BOT-A5EC055C,Shanghai Trade Sourcing 048,Berlin Industrial Supplier 005,339167.15615591395,"Pyongyang, DPRK (Sanctioned)",0.5084,True,0.01577019691467285,SUCCESS
+TEST-BOT-44A05FEB,Osaka Parts Procurement 042,NY Global LLC Supplier 025,493738.1005156625,Unknown Dark Web Node,0.5084,True,0.02670001983642578,SUCCESS
+TEST-BOT-84E669DD,Moscow Heavy Ind. Procurement 002,Osaka Parts Factory 007,47736.95818126475,"Los Angeles, USA",0.3997,False,0.005114316940307617,SUCCESS
+TEST-BOT-0F9B9CF5,Texas Tech Buyer Group 043,Berlin Industrial Supplier 005,52715.17569449891,"Los Angeles, USA",0.415,False,0.006089448928833008,SUCCESS
+TEST-BOT-BCF97426,Shenzhen Innovation Procurement 030,Siberian Tech Manufacturing 016,13454.28116110591,"Hamburg, Germany",0.3778,False,0.005228281021118164,SUCCESS
+TEST-BOT-AA8E2CB8,Bavaria Auto Procurement 022,London General Supplier 049,13502.939039890589,"Rotterdam, Netherlands",0.376,False,0.13419127464294434,SUCCESS
+TEST-BOT-EF90303F,Shenzhen Innovation Procurement 030,Paris Luxury Manufacturing 020,36595.35606174289,"Hamburg, Germany",0.3618,False,0.011868953704833984,SUCCESS
+TEST-BOT-3CBA4C49,Guangzhou Manufacturing Buyer Group 031,California Cyber Exporter 042,63286.8473741434,"Rotterdam, Netherlands",0.5084,True,0.011629104614257812,SUCCESS
+TEST-BOT-846B3493,Tokyo Electronics Importer 041,Bavaria Auto Factory 035,41540.51411866813,"Dubai, UAE",0.379,False,0.008877992630004883,SUCCESS
+TEST-BOT-2C71E1CE,Bavaria Auto Procurement 022,NY Global LLC Supplier 025,42529.79962199003,"Rotterdam, Netherlands",0.3864,False,0.0072176456451416016,SUCCESS
+TEST-BOT-D11EA275,Bavaria Auto Procurement 038,London General Supplier 033,10919.873500702328,"Rotterdam, Netherlands",0.3817,False,0.015484333038330078,SUCCESS
+TEST-BOT-7F91BC4B,Moscow Heavy Ind. Procurement 050,Guangzhou Manufacturing Manufacturing 012,376047.5378878727,Unknown Dark Web Node,0.5084,True,0.0077495574951171875,SUCCESS
+TEST-BOT-ADF03D5A,Tokyo Electronics Importer 025,NY Global LLC Supplier 041,29611.604361288624,"Los Angeles, USA",0.3067,False,0.038767337799072266,SUCCESS
+TEST-BOT-CA1CA012,Guangzhou Manufacturing Buyer Group 015,Texas Tech Manufacturing 024,20166.813800330994,"Rotterdam, Netherlands",0.3548,False,0.007559776306152344,SUCCESS
+TEST-BOT-0EF9965A,London General Sourcing 036,Osaka Parts Factory 039,58737.69998334991,"Rotterdam, Netherlands",0.4773,False,0.010233640670776367,SUCCESS
+TEST-BOT-25345CAA,Moscow Heavy Ind. Procurement 002,Berlin Industrial Supplier 005,15423.49614095116,"Rotterdam, Netherlands",0.3667,False,0.009911775588989258,SUCCESS
+TEST-BOT-78F728F3,Moscow Heavy Ind. Procurement 050,Volga Trade Exporter 046,399064.3009227095,Unknown Dark Web Node,0.5084,True,0.008525609970092773,SUCCESS
+TEST-BOT-3C20B21C,Shenzhen Innovation Procurement 046,California Cyber Exporter 026,25369.348288871734,"Dubai, UAE",0.3312,False,0.010434627532958984,SUCCESS
+TEST-BOT-138254B6,Texas Tech Buyer Group 027,NY Global LLC Supplier 009,51228.02480988986,"Los Angeles, USA",0.4028,False,0.008582353591918945,SUCCESS
+TEST-BOT-28DD50A0,Shenzhen Innovation Procurement 030,Siberian Tech Manufacturing 016,5912.352462115248,"Los Angeles, USA",0.4968,False,0.007854700088500977,SUCCESS
+TEST-BOT-E5905EC3,Guangzhou Manufacturing Buyer Group 031,Tokyo Electronics Exporter 006,62598.193317775585,"Dubai, UAE",0.5084,True,0.11269593238830566,SUCCESS
+TEST-BOT-A8BE9F16,Moscow Heavy Ind. Procurement 034,Oxford Textiles Exporter 050,74820.91049508238,"Dubai, UAE",0.5084,True,0.0067026615142822266,SUCCESS
+TEST-BOT-5CCAD056,Shanghai Trade Sourcing 048,Texas Tech Manufacturing 040,35199.46866087027,"Singapore, Singapore",0.357,False,0.00822138786315918,SUCCESS
+TEST-BOT-174FFC37,Tokyo Electronics Importer 041,Guangzhou Manufacturing Manufacturing 028,362119.35949321394,Unknown Dark Web Node,0.5084,True,0.008050680160522461,SUCCESS
+TEST-BOT-BC0E4901,Osaka Parts Procurement 026,Tokyo Electronics Exporter 022,62444.409360544916,"Los Angeles, USA",0.5084,True,0.010963201522827148,SUCCESS
+TEST-BOT-89C2ABD8,Osaka Parts Procurement 010,Tokyo Electronics Exporter 006,29868.368068416665,"Dubai, UAE",0.3044,False,0.010160207748413086,SUCCESS
+TEST-BOT-3AA703D9,Oxford Textiles Importer 005,Guangzhou Manufacturing Manufacturing 012,28002.326844633968,"Los Angeles, USA",0.3095,False,0.006728649139404297,SUCCESS
+TEST-BOT-3BF94E17,Texas Tech Buyer Group 011,Shanghai Trade Supplier 045,477774.65190604655,Unknown Dark Web Node,0.5084,True,0.007472038269042969,SUCCESS
+TEST-BOT-C163EB9F,Berlin Industrial Sourcing 040,Tokyo Electronics Exporter 038,75331.1064436136,"Singapore, Singapore",0.5084,True,0.008471488952636719,SUCCESS
+TEST-BOT-C1FF4997,Volga Trade Importer 049,Bavaria Auto Factory 019,38664.92552369865,"Hamburg, Germany",0.3721,False,0.0062372684478759766,SUCCESS
+TEST-BOT-9A3932B6,Moscow Heavy Ind. Procurement 050,Berlin Industrial Supplier 021,38099.5536222548,"Los Angeles, USA",0.3709,False,0.0071146488189697266,SUCCESS
+TEST-BOT-796B1949,Volga Trade Importer 017,Berlin Industrial Supplier 005,45976.93634154076,"Singapore, Singapore",0.3983,False,0.007992744445800781,SUCCESS
+TEST-BOT-737A09B7,Paris Luxury Buyer Group 023,Osaka Parts Factory 039,18011.122630674712,"Dubai, UAE",0.3607,False,0.005674839019775391,SUCCESS
+TEST-BOT-8BF708EE,Osaka Parts Procurement 026,Moscow Heavy Ind. Factory 047,20980.06604825737,"Singapore, Singapore",0.3538,False,0.005028963088989258,SUCCESS
+TEST-BOT-29297B2F,Moscow Heavy Ind. Procurement 050,Osaka Parts Factory 007,10521.03606297647,"Dubai, UAE",0.3847,False,0.004494428634643555,SUCCESS
+TEST-BOT-D959784C,Tokyo Electronics Importer 025,London General Supplier 033,73884.3605218575,"Singapore, Singapore",0.5084,True,0.007844686508178711,SUCCESS
+TEST-BOT-B7725161,Guangzhou Manufacturing Buyer Group 047,Guangzhou Manufacturing Manufacturing 028,51982.33114917006,"Hamburg, Germany",0.4104,False,0.0076580047607421875,SUCCESS
+TEST-BOT-B8AABDEC,Siberian Tech Buyer Group 003,Volga Trade Exporter 014,44979.44839451824,"Hamburg, Germany",0.3972,False,0.08395147323608398,SUCCESS
+TEST-BOT-977766D5,Berlin Industrial Sourcing 024,Bavaria Auto Factory 035,11786.843501525436,"Rotterdam, Netherlands",0.3722,False,0.0066831111907958984,SUCCESS
+TEST-BOT-915F4394,Oxford Textiles Importer 021,Siberian Tech Manufacturing 016,254296.06619723674,"Pyongyang, DPRK (Sanctioned)",0.5084,True,0.008190155029296875,SUCCESS
+TEST-BOT-2BF4382B,Shenzhen Innovation Procurement 030,London General Supplier 049,46748.724748012406,"Los Angeles, USA",0.3972,False,0.010771036148071289,SUCCESS
+TEST-BOT-FE7F2C88,Oxford Textiles Importer 005,California Cyber Exporter 042,29371.50561407049,"Singapore, Singapore",0.3075,False,0.008421897888183594,SUCCESS
+TEST-BOT-D3886CFE,California Cyber Importer 013,Guangzhou Manufacturing Manufacturing 012,73127.46092137015,"Hamburg, Germany",0.5084,True,0.00848841667175293,SUCCESS
+TEST-BOT-DD150DD4,Moscow Heavy Ind. Procurement 018,London General Supplier 049,28817.31341213904,"Rotterdam, Netherlands",0.3089,False,0.008267879486083984,SUCCESS
+TEST-BOT-11A6C36C,Berlin Industrial Sourcing 024,Texas Tech Manufacturing 040,18441.687039021625,"Rotterdam, Netherlands",0.3607,False,0.012398719787597656,SUCCESS
+TEST-BOT-70B49F1B,Bavaria Auto Procurement 022,Moscow Heavy Ind. Factory 031,73451.0865058589,"Singapore, Singapore",0.5084,True,0.11620569229125977,SUCCESS
+TEST-BOT-415D28EB,California Cyber Importer 013,Oxford Textiles Exporter 002,63994.930145570666,"Los Angeles, USA",0.5084,True,0.02004265785217285,SUCCESS
+TEST-BOT-F7FD6D5D,California Cyber Importer 045,Paris Luxury Manufacturing 004,28211.536457739563,"Los Angeles, USA",0.308,False,0.014356374740600586,SUCCESS
+TEST-BOT-0EAE3573,Siberian Tech Buyer Group 019,Paris Luxury Manufacturing 036,75025.02067857272,"Rotterdam, Netherlands",0.5084,True,0.013802289962768555,SUCCESS
+TEST-BOT-96AD0444,Osaka Parts Procurement 042,Texas Tech Manufacturing 040,11735.925456452187,"Dubai, UAE",0.3712,False,0.016169309616088867,SUCCESS
+TEST-BOT-CD43FA8B,Paris Luxury Buyer Group 039,London General Supplier 033,28996.350051849484,"Hamburg, Germany",0.305,False,0.23714375495910645,SUCCESS
+TEST-BOT-C6939FFF,Moscow Heavy Ind. Procurement 050,Tokyo Electronics Exporter 038,41573.18941695131,"Singapore, Singapore",0.379,False,0.008150100708007812,SUCCESS
+TEST-BOT-CB2AEB82,Tokyo Electronics Importer 041,Moscow Heavy Ind. Factory 031,58316.45829707846,"Singapore, Singapore",0.4675,False,0.010829687118530273,SUCCESS
+TEST-BOT-B71A6730,NY Global LLC Sourcing 028,Siberian Tech Manufacturing 016,21638.639997390903,"Singapore, Singapore",0.3519,False,0.009136676788330078,SUCCESS
+TEST-BOT-C3F8CC18,Bavaria Auto Procurement 022,Oxford Textiles Exporter 002,39328.21035579255,"Singapore, Singapore",0.3769,False,0.0054781436920166016,SUCCESS
+TEST-BOT-A374A823,Shenzhen Innovation Procurement 030,Paris Luxury Manufacturing 004,48487.10678318301,"Hamburg, Germany",0.4008,False,0.006619930267333984,SUCCESS
+TEST-BOT-C52EE8EA,Oxford Textiles Importer 037,Paris Luxury Manufacturing 036,54334.843263326526,"Los Angeles, USA",0.4219,False,0.006378889083862305,SUCCESS
+TEST-BOT-89D0A3BF,NY Global LLC Sourcing 028,Tokyo Electronics Exporter 022,35397.39842965681,"Dubai, UAE",0.357,False,0.007662534713745117,SUCCESS
+TEST-BOT-16A74210,Siberian Tech Buyer Group 003,London General Supplier 049,66524.65239816224,"Dubai, UAE",0.5084,True,0.010178804397583008,SUCCESS
+TEST-BOT-386F10B9,California Cyber Importer 045,Berlin Industrial Supplier 021,68482.91243596404,"Hamburg, Germany",0.5084,True,0.011252641677856445,SUCCESS
+TEST-BOT-1FA70EDD,Shanghai Trade Sourcing 032,NY Global LLC Supplier 025,11370.71880683551,"Rotterdam, Netherlands",0.3741,False,0.009075164794921875,SUCCESS
+TEST-BOT-40FE267E,Moscow Heavy Ind. Procurement 034,London General Supplier 049,394037.9115030193,Unknown Dark Web Node,0.5084,True,0.009901046752929688,SUCCESS
+TEST-BOT-14560AB9,Bavaria Auto Procurement 022,Oxford Textiles Exporter 034,64533.41709104986,"Hamburg, Germany",0.5084,True,0.013466596603393555,SUCCESS
+TEST-BOT-AC45DEDB,London General Sourcing 004,Oxford Textiles Exporter 002,74898.03510600637,"Dubai, UAE",0.5084,True,0.02592325210571289,SUCCESS
+TEST-BOT-B13AE28A,Tokyo Electronics Importer 025,Siberian Tech Manufacturing 032,316735.8741297403,"Pyongyang, DPRK (Sanctioned)",0.5084,True,0.012702703475952148,SUCCESS
+TEST-BOT-A3276C74,Texas Tech Buyer Group 027,Osaka Parts Factory 007,66724.99569731075,"Hamburg, Germany",0.5084,True,0.030164003372192383,SUCCESS
+TEST-BOT-B99C1AA8,Osaka Parts Procurement 010,Moscow Heavy Ind. Factory 015,295675.944434064,Unknown Dark Web Node,0.5084,True,0.0605158805847168,SUCCESS
+TEST-BOT-91DCB0C1,Volga Trade Importer 001,Shanghai Trade Supplier 013,8571.057887986219,"Los Angeles, USA",0.4299,False,0.005602359771728516,SUCCESS
+TEST-BOT-CA5835F2,Moscow Heavy Ind. Procurement 050,Shenzhen Innovation Factory 027,56896.52576525432,"Hamburg, Germany",0.445,False,0.006188631057739258,SUCCESS
+TEST-BOT-72228D0F,Guangzhou Manufacturing Buyer Group 047,Shenzhen Innovation Factory 011,76210.4055904829,"Singapore, Singapore",0.5084,True,0.008891582489013672,SUCCESS
+TEST-BOT-4C5B5EFB,Berlin Industrial Sourcing 008,NY Global LLC Supplier 041,74488.36732292744,"Hamburg, Germany",0.5084,True,0.00948023796081543,SUCCESS
+TEST-BOT-9D7F8E06,Bavaria Auto Procurement 006,Bavaria Auto Factory 003,446504.3938886861,Unknown Dark Web Node,0.5084,True,0.010833978652954102,SUCCESS
+TEST-BOT-7C5688CC,Berlin Industrial Sourcing 024,Bavaria Auto Factory 035,76453.45295658708,"Dubai, UAE",0.5084,True,0.010740280151367188,SUCCESS
+TEST-BOT-20BD2189,Shanghai Trade Sourcing 048,Berlin Industrial Supplier 037,19281.91457696959,"Hamburg, Germany",0.3565,False,0.008934497833251953,SUCCESS
+TEST-BOT-47A9AC4E,Osaka Parts Procurement 010,NY Global LLC Supplier 025,46602.480929480815,"Rotterdam, Netherlands",0.3983,False,0.006730794906616211,SUCCESS
+TEST-BOT-20144076,Paris Luxury Buyer Group 023,Shenzhen Innovation Factory 043,377980.72888045677,Unknown Dark Web Node,0.5084,True,0.007599353790283203,SUCCESS
+TEST-BOT-C3F7DF9E,Osaka Parts Procurement 026,Berlin Industrial Supplier 037,24883.301449367373,"Hamburg, Germany",0.334,False,0.3458058834075928,SUCCESS
+TEST-BOT-2CB74DBC,Moscow Heavy Ind. Procurement 002,London General Supplier 017,22318.679255752413,"Hamburg, Germany",0.3455,False,0.008446216583251953,SUCCESS
+TEST-BOT-22F26665,Bavaria Auto Procurement 038,Siberian Tech Manufacturing 032,71045.14934955517,"Singapore, Singapore",0.5084,True,0.008498668670654297,SUCCESS
+TEST-BOT-F13A4874,Bavaria Auto Procurement 038,Shanghai Trade Supplier 045,13381.179538775921,"Singapore, Singapore",0.3778,False,0.008411407470703125,SUCCESS
+TEST-BOT-E3CD05FC,Moscow Heavy Ind. Procurement 018,Shenzhen Innovation Factory 043,478253.3705198313,"Pyongyang, DPRK (Sanctioned)",0.5084,True,0.009172916412353516,SUCCESS
+TEST-BOT-64D9F122,Shanghai Trade Sourcing 048,Berlin Industrial Supplier 037,28324.472759674765,"Hamburg, Germany",0.3081,False,0.00772547721862793,SUCCESS
+TEST-BOT-D7C0B376,NY Global LLC Sourcing 012,Volga Trade Exporter 014,19276.023965692122,"Singapore, Singapore",0.3565,False,0.005067348480224609,SUCCESS
+TEST-BOT-FE7CBE17,Bavaria Auto Procurement 038,Shanghai Trade Supplier 029,30040.62488490332,"Los Angeles, USA",0.3028,False,0.004545688629150391,SUCCESS
+TEST-BOT-1DA79052,NY Global LLC Sourcing 028,Siberian Tech Manufacturing 032,38753.59793238998,"Hamburg, Germany",0.3721,False,0.005265474319458008,SUCCESS
+TEST-BOT-898B022A,Bavaria Auto Procurement 006,Volga Trade Exporter 046,54844.434961556886,"Los Angeles, USA",0.4254,False,0.006211280822753906,SUCCESS
+TEST-BOT-116AF761,NY Global LLC Sourcing 044,Texas Tech Manufacturing 040,76509.38773573146,"Singapore, Singapore",0.5084,True,0.007548809051513672,SUCCESS
+TEST-BOT-C4AE0B48,Berlin Industrial Sourcing 008,Osaka Parts Factory 023,35831.64209661665,"Los Angeles, USA",0.357,False,0.009894132614135742,SUCCESS
+TEST-BOT-60215D55,Moscow Heavy Ind. Procurement 050,Oxford Textiles Exporter 018,31046.927422262364,"Los Angeles, USA",0.3174,False,0.008238792419433594,SUCCESS
+TEST-BOT-86AE4841,Moscow Heavy Ind. Procurement 034,Berlin Industrial Supplier 021,21408.57017723488,"Dubai, UAE",0.3545,False,0.006245136260986328,SUCCESS
+TEST-BOT-14382891,Texas Tech Buyer Group 027,Moscow Heavy Ind. Factory 047,11554.113657100745,"Los Angeles, USA",0.3741,False,0.0060939788818359375,SUCCESS
+TEST-BOT-2179D9B6,Moscow Heavy Ind. Procurement 050,Paris Luxury Manufacturing 020,37086.154840041825,"Los Angeles, USA",0.3646,False,0.004562854766845703,SUCCESS
+TEST-BOT-BE54E79F,Tokyo Electronics Importer 041,London General Supplier 049,6558.872166207487,"Los Angeles, USA",0.4869,False,0.005239725112915039,SUCCESS
+TEST-BOT-67EEFF60,Shenzhen Innovation Procurement 014,Shanghai Trade Supplier 029,60589.661010329444,"Singapore, Singapore",0.5084,True,0.008064746856689453,SUCCESS
+TEST-BOT-2F353303,Shenzhen Innovation Procurement 030,NY Global LLC Supplier 041,56077.454438262976,"Los Angeles, USA",0.4365,False,0.009279012680053711,SUCCESS
+TEST-BOT-9D4A14A5,Bavaria Auto Procurement 006,Volga Trade Exporter 030,52813.182953627314,"Rotterdam, Netherlands",0.4139,False,0.00842428207397461,SUCCESS
+TEST-BOT-93C4068F,California Cyber Importer 045,Volga Trade Exporter 046,30920.21177019394,"Los Angeles, USA",0.3167,False,0.006223917007446289,SUCCESS
+TEST-BOT-77AB864F,Oxford Textiles Importer 005,Siberian Tech Manufacturing 016,55226.21990492332,"Los Angeles, USA",0.4287,False,0.005110979080200195,SUCCESS
+TEST-BOT-09217877,Osaka Parts Procurement 042,Oxford Textiles Exporter 034,73132.56112968437,"Hamburg, Germany",0.5084,True,0.009235858917236328,SUCCESS
+TEST-BOT-59E8DCDE,Moscow Heavy Ind. Procurement 050,Shenzhen Innovation Factory 027,34350.82131672289,"Singapore, Singapore",0.3544,False,0.08481264114379883,SUCCESS
+TEST-BOT-76A02107,Moscow Heavy Ind. Procurement 002,Osaka Parts Factory 039,32336.18108371639,"Singapore, Singapore",0.339,False,0.005301713943481445,SUCCESS
+TEST-BOT-13E2541C,Bavaria Auto Procurement 022,London General Supplier 033,5332.632727856111,"Rotterdam, Netherlands",0.5078,True,0.006818056106567383,SUCCESS
+TEST-BOT-0E9163CE,Shenzhen Innovation Procurement 046,Paris Luxury Manufacturing 020,17101.98181752494,"Dubai, UAE",0.362,False,0.01039433479309082,SUCCESS
+TEST-BOT-6FA1AC6B,Texas Tech Buyer Group 011,Paris Luxury Manufacturing 020,67373.73851484217,"Singapore, Singapore",0.5084,True,0.012020349502563477,SUCCESS
+TEST-BOT-B25DC8ED,Texas Tech Buyer Group 027,Moscow Heavy Ind. Factory 031,44026.10732974,"Rotterdam, Netherlands",0.3954,False,0.024755477905273438,SUCCESS
+TEST-BOT-F04C4FF0,Bavaria Auto Procurement 006,Moscow Heavy Ind. Factory 031,482427.190378224,Unknown Dark Web Node,0.5084,True,0.007563352584838867,SUCCESS
+TEST-BOT-365462A5,NY Global LLC Sourcing 028,London General Supplier 017,262163.0737706403,"Pyongyang, DPRK (Sanctioned)",0.5084,True,0.006595611572265625,SUCCESS
+TEST-BOT-F1E81C77,California Cyber Importer 045,Moscow Heavy Ind. Factory 031,64417.87542309907,"Hamburg, Germany",0.5084,True,0.010583162307739258,SUCCESS
+TEST-BOT-2BFF36EF,Guangzhou Manufacturing Buyer Group 047,Oxford Textiles Exporter 018,56267.31914682028,"Hamburg, Germany",0.4377,False,0.04094815254211426,SUCCESS
+TEST-BOT-335FC827,Siberian Tech Buyer Group 003,London General Supplier 017,71441.22139474348,"Singapore, Singapore",0.5084,True,0.006985664367675781,SUCCESS
+TEST-BOT-B5EA8696,Oxford Textiles Importer 021,Siberian Tech Manufacturing 016,77619.42526407941,"Los Angeles, USA",0.5084,True,0.007239580154418945,SUCCESS
+TEST-BOT-49B93729,Tokyo Electronics Importer 041,Shanghai Trade Supplier 029,27153.95514279948,"Dubai, UAE",0.3165,False,0.0052738189697265625,SUCCESS
+TEST-BOT-96A10F26,Volga Trade Importer 033,Guangzhou Manufacturing Manufacturing 012,16879.370570353094,"Hamburg, Germany",0.3629,False,0.008738279342651367,SUCCESS
+TEST-BOT-31D76BAB,Volga Trade Importer 001,Tokyo Electronics Exporter 038,23687.333870874176,"Hamburg, Germany",0.3348,False,0.016083240509033203,SUCCESS
+TEST-BOT-512414DB,NY Global LLC Sourcing 012,Shenzhen Innovation Factory 011,73472.50840050893,"Los Angeles, USA",0.5084,True,0.12383151054382324,SUCCESS
+TEST-BOT-67F6BA34,Osaka Parts Procurement 010,Volga Trade Exporter 046,78236.1214980151,"Los Angeles, USA",0.5084,True,0.014967918395996094,SUCCESS
+TEST-BOT-C31733F4,Bavaria Auto Procurement 006,London General Supplier 001,44715.44078878079,"Dubai, UAE",0.3974,False,0.014231204986572266,SUCCESS
+TEST-BOT-4859B570,NY Global LLC Sourcing 044,Guangzhou Manufacturing Manufacturing 044,60148.003383514886,"Singapore, Singapore",0.5084,True,0.010562658309936523,SUCCESS
+TEST-BOT-8F8A6D7C,Osaka Parts Procurement 010,Oxford Textiles Exporter 050,59937.85479351494,"Los Angeles, USA",0.5046,True,0.01078486442565918,SUCCESS
+TEST-BOT-AEB7E5AC,California Cyber Importer 013,Moscow Heavy Ind. Factory 015,44868.96114146426,"Hamburg, Germany",0.3972,False,0.008514404296875,SUCCESS
+TEST-BOT-44DB6FAD,Oxford Textiles Importer 005,Volga Trade Exporter 014,19546.61995791256,"Hamburg, Germany",0.3539,False,0.008728504180908203,SUCCESS
+TEST-BOT-0C118868,London General Sourcing 004,London General Supplier 001,65674.98276635438,"Rotterdam, Netherlands",0.5084,True,0.016045331954956055,SUCCESS
+TEST-BOT-AA9BDF59,Berlin Industrial Sourcing 008,California Cyber Exporter 042,21898.003428924243,"Hamburg, Germany",0.3482,False,0.016397953033447266,SUCCESS
+TEST-BOT-BFC344E8,Volga Trade Importer 033,Bavaria Auto Factory 019,468526.8329231074,Unknown Dark Web Node,0.5084,True,0.014779329299926758,SUCCESS
+TEST-BOT-B5A837D4,Guangzhou Manufacturing Buyer Group 031,Tokyo Electronics Exporter 038,36495.42894978769,"Hamburg, Germany",0.3591,False,0.016628742218017578,SUCCESS
+TEST-BOT-5FFEBF3F,Moscow Heavy Ind. Procurement 050,Bavaria Auto Factory 003,315218.0950520805,"Pyongyang, DPRK (Sanctioned)",0.5084,True,0.03272652626037598,SUCCESS
+TEST-BOT-8C7062C8,Bavaria Auto Procurement 038,NY Global LLC Supplier 041,8243.708100936932,"Singapore, Singapore",0.4357,False,0.005850076675415039,SUCCESS
+TEST-BOT-3DFB3309,Texas Tech Buyer Group 043,Volga Trade Exporter 014,28294.101657158142,"Dubai, UAE",0.3081,False,0.005859375,SUCCESS
+TEST-BOT-E4936699,Paris Luxury Buyer Group 007,Shenzhen Innovation Factory 011,35655.197251966965,"Singapore, Singapore",0.357,False,0.09514808654785156,SUCCESS
+TEST-BOT-A53D5C1F,Guangzhou Manufacturing Buyer Group 047,Shenzhen Innovation Factory 043,26928.99256655704,"Dubai, UAE",0.3175,False,0.005893707275390625,SUCCESS
+TEST-BOT-FC1C48C8,Oxford Textiles Importer 037,Shanghai Trade Supplier 045,37306.35169919169,"Dubai, UAE",0.3625,False,0.005347490310668945,SUCCESS
+TEST-BOT-521B8386,Bavaria Auto Procurement 022,California Cyber Exporter 026,42991.46226911881,"Los Angeles, USA",0.3897,False,0.005179166793823242,SUCCESS
+TEST-BOT-DDA4E021,California Cyber Importer 045,Osaka Parts Factory 039,29122.550363390474,"Singapore, Singapore",0.3057,False,0.009360074996948242,SUCCESS
+TEST-BOT-912560E3,Tokyo Electronics Importer 009,London General Supplier 001,46631.3075194214,"Singapore, Singapore",0.3983,False,0.008316516876220703,SUCCESS
+TEST-BOT-84F75631,Berlin Industrial Sourcing 024,Berlin Industrial Supplier 021,74855.0930231526,"Singapore, Singapore",0.5084,True,0.00789642333984375,SUCCESS
+TEST-BOT-6E39878C,Guangzhou Manufacturing Buyer Group 015,Moscow Heavy Ind. Factory 031,60011.52225680182,"Singapore, Singapore",0.5084,True,0.01204681396484375,SUCCESS
+TEST-BOT-8A956AC5,Berlin Industrial Sourcing 024,Paris Luxury Manufacturing 020,68752.60248851759,"Singapore, Singapore",0.5084,True,0.0868077278137207,SUCCESS
+TEST-BOT-4894C6FF,NY Global LLC Sourcing 044,Volga Trade Exporter 014,61357.135918906024,"Dubai, UAE",0.5084,True,0.006867170333862305,SUCCESS
+TEST-BOT-1943ED8A,Osaka Parts Procurement 042,London General Supplier 049,53429.665405290165,"Los Angeles, USA",0.4172,False,0.00568389892578125,SUCCESS
+TEST-BOT-F697A87C,Tokyo Electronics Importer 009,London General Supplier 049,48813.63161509854,"Singapore, Singapore",0.3997,False,0.23493409156799316,SUCCESS
+TEST-BOT-051DFFCA,Shenzhen Innovation Procurement 030,Berlin Industrial Supplier 021,22194.261451634025,"Hamburg, Germany",0.3455,False,0.022491931915283203,SUCCESS
+TEST-BOT-BF19B4BF,Texas Tech Buyer Group 027,California Cyber Exporter 026,431283.7391453979,Unknown Dark Web Node,0.5084,True,0.030463457107543945,SUCCESS
+TEST-BOT-3FA15D4C,Moscow Heavy Ind. Procurement 034,Moscow Heavy Ind. Factory 015,34517.71313942154,"Hamburg, Germany",0.3535,False,0.01189279556274414,SUCCESS
+TEST-BOT-231B2A8E,Tokyo Electronics Importer 041,Bavaria Auto Factory 035,54176.31104808353,"Rotterdam, Netherlands",0.4208,False,0.02589130401611328,SUCCESS
+TEST-BOT-DB770994,Shenzhen Innovation Procurement 046,Tokyo Electronics Exporter 006,9115.822184266857,"Hamburg, Germany",0.4169,False,0.014269590377807617,SUCCESS
+TEST-BOT-297C0D43,California Cyber Importer 013,Osaka Parts Factory 039,22785.442745523982,"Los Angeles, USA",0.3453,False,0.08366036415100098,SUCCESS
+TEST-BOT-B3A1124E,Shanghai Trade Sourcing 048,California Cyber Exporter 042,12819.57775004119,"Los Angeles, USA",0.3757,False,0.0069200992584228516,SUCCESS
+TEST-BOT-04014839,Oxford Textiles Importer 021,Tokyo Electronics Exporter 022,43717.90001120029,"Hamburg, Germany",0.3954,False,0.012109994888305664,SUCCESS
+TEST-BOT-2D279558,Tokyo Electronics Importer 041,Guangzhou Manufacturing Manufacturing 028,17232.04387936181,"Los Angeles, USA",0.362,False,0.013811826705932617,SUCCESS
+TEST-BOT-F2B9C39E,Moscow Heavy Ind. Procurement 018,Guangzhou Manufacturing Manufacturing 012,21406.771035268215,"Hamburg, Germany",0.3545,False,0.012028932571411133,SUCCESS
+TEST-BOT-7C45A7E0,Guangzhou Manufacturing Buyer Group 047,Oxford Textiles Exporter 018,73847.89741706033,"Los Angeles, USA",0.5084,True,0.012336492538452148,SUCCESS
+TEST-BOT-CB805763,Berlin Industrial Sourcing 008,Osaka Parts Factory 023,23286.39717626987,"Dubai, UAE",0.3388,False,0.009653806686401367,SUCCESS
+TEST-BOT-236D2219,Bavaria Auto Procurement 006,Shanghai Trade Supplier 029,36681.00256789791,"Rotterdam, Netherlands",0.3618,False,0.006271839141845703,SUCCESS
+TEST-BOT-E4310926,Shenzhen Innovation Procurement 030,Berlin Industrial Supplier 037,15394.569271236356,"Dubai, UAE",0.3667,False,0.0053005218505859375,SUCCESS
+TEST-BOT-03269CEE,Berlin Industrial Sourcing 024,Berlin Industrial Supplier 005,78581.423719645,"Rotterdam, Netherlands",0.5084,True,0.008034944534301758,SUCCESS
+TEST-BOT-8C327345,Moscow Heavy Ind. Procurement 050,Guangzhou Manufacturing Manufacturing 044,12934.870682602535,"Hamburg, Germany",0.3757,False,0.00914144515991211,SUCCESS
+TEST-BOT-BE4FAA39,Volga Trade Importer 033,London General Supplier 033,13478.932087665844,"Los Angeles, USA",0.376,False,0.006072044372558594,SUCCESS
+TEST-BOT-88D9091E,Oxford Textiles Importer 005,Shanghai Trade Supplier 029,262580.16544553486,"Pyongyang, DPRK (Sanctioned)",0.5084,True,0.009732961654663086,SUCCESS
+TEST-BOT-415D46EB,Berlin Industrial Sourcing 040,Volga Trade Exporter 014,360895.88734789146,"Pyongyang, DPRK (Sanctioned)",0.5084,True,0.04254150390625,SUCCESS
+TEST-BOT-EA398EB2,Berlin Industrial Sourcing 040,Moscow Heavy Ind. Factory 031,72864.28887144176,"Hamburg, Germany",0.5084,True,0.00830841064453125,SUCCESS
+TEST-BOT-1F18B3B1,Siberian Tech Buyer Group 019,Osaka Parts Factory 023,73109.21245791265,"Singapore, Singapore",0.5084,True,0.012288808822631836,SUCCESS
+TEST-BOT-C0FB1B7A,Siberian Tech Buyer Group 019,Texas Tech Manufacturing 008,10988.714851629516,"Singapore, Singapore",0.3817,False,0.006352424621582031,SUCCESS
+TEST-BOT-2CB6CCF8,Bavaria Auto Procurement 022,Bavaria Auto Factory 019,59061.56420917366,"Hamburg, Germany",0.4859,False,0.06524467468261719,SUCCESS
+TEST-BOT-2996A517,Paris Luxury Buyer Group 023,Tokyo Electronics Exporter 022,434178.3503391866,Unknown Dark Web Node,0.5084,True,0.09175229072570801,SUCCESS
+TEST-BOT-5D17CDBA,Volga Trade Importer 001,Paris Luxury Manufacturing 036,45051.14185916539,"Hamburg, Germany",0.3972,False,0.23482584953308105,SUCCESS
+TEST-BOT-32C87798,Siberian Tech Buyer Group 003,Oxford Textiles Exporter 050,39017.694531449655,"Los Angeles, USA",0.373,False,0.0060808658599853516,SUCCESS
+TEST-BOT-1AE6942E,Bavaria Auto Procurement 006,Guangzhou Manufacturing Manufacturing 028,251541.43331533694,"Pyongyang, DPRK (Sanctioned)",0.5084,True,0.008861303329467773,SUCCESS
+TEST-BOT-AD218F7A,Bavaria Auto Procurement 038,Texas Tech Manufacturing 040,38940.599097168684,"Hamburg, Germany",0.373,False,0.008085966110229492,SUCCESS
+TEST-BOT-7276B8F6,Bavaria Auto Procurement 006,Shanghai Trade Supplier 013,64212.516500668615,"Hamburg, Germany",0.5084,True,0.008498668670654297,SUCCESS
+TEST-BOT-28C399C1,Shanghai Trade Sourcing 016,Osaka Parts Factory 023,75883.32306461984,"Los Angeles, USA",0.5084,True,0.0076999664306640625,SUCCESS
+TEST-BOT-4A7A930B,California Cyber Importer 045,Tokyo Electronics Exporter 038,18981.16628607706,"Hamburg, Germany",0.3589,False,0.0053288936614990234,SUCCESS
+TEST-BOT-BE1E2986,Shenzhen Innovation Procurement 030,Texas Tech Manufacturing 008,79858.46126665153,"Dubai, UAE",0.5084,True,0.009829998016357422,SUCCESS
+TEST-BOT-97592118,Texas Tech Buyer Group 043,London General Supplier 049,74540.22254940655,"Singapore, Singapore",0.5084,True,0.03669905662536621,SUCCESS
+TEST-BOT-F97343CB,Oxford Textiles Importer 005,Moscow Heavy Ind. Factory 031,351776.3159922643,Unknown Dark Web Node,0.5084,True,0.011966943740844727,SUCCESS
+TEST-BOT-48CF42A3,Moscow Heavy Ind. Procurement 002,Volga Trade Exporter 014,290036.1277659558,Unknown Dark Web Node,0.5084,True,0.11169314384460449,SUCCESS
+TEST-BOT-34C065D5,Moscow Heavy Ind. Procurement 002,Shenzhen Innovation Factory 027,387872.3179592205,Unknown Dark Web Node,0.5084,True,0.012246370315551758,SUCCESS
+TEST-BOT-8F0A7689,Oxford Textiles Importer 037,Berlin Industrial Supplier 005,25758.24115404468,"Rotterdam, Netherlands",0.3292,False,0.014341354370117188,SUCCESS
+TEST-BOT-48DBF178,Berlin Industrial Sourcing 024,Volga Trade Exporter 030,494828.1163611365,"Pyongyang, DPRK (Sanctioned)",0.5084,True,0.337658166885376,SUCCESS
+TEST-BOT-DA2BE58A,London General Sourcing 036,Shenzhen Innovation Factory 011,29530.342471004235,"Singapore, Singapore",0.3067,False,0.00710296630859375,SUCCESS
+TEST-BOT-F6A3F14F,Oxford Textiles Importer 037,Osaka Parts Factory 007,73246.27214823899,"Los Angeles, USA",0.5084,True,0.009710311889648438,SUCCESS
+TEST-BOT-B3E32E49,NY Global LLC Sourcing 012,Siberian Tech Manufacturing 032,30163.524704033294,"Singapore, Singapore",0.3058,False,0.010155439376831055,SUCCESS
+TEST-BOT-8A18BD08,Shanghai Trade Sourcing 048,Texas Tech Manufacturing 008,25851.043493708745,"Rotterdam, Netherlands",0.3282,False,0.01007699966430664,SUCCESS
+TEST-BOT-1281405E,Shenzhen Innovation Procurement 014,Shanghai Trade Supplier 045,9895.105607549915,"Dubai, UAE",0.3907,False,0.009302377700805664,SUCCESS
+TEST-BOT-3B0CD717,Shenzhen Innovation Procurement 046,Shanghai Trade Supplier 029,42387.59373343537,"Rotterdam, Netherlands",0.3832,False,0.005874156951904297,SUCCESS
+TEST-BOT-5264AD10,Oxford Textiles Importer 021,Oxford Textiles Exporter 018,53538.359543297694,"Singapore, Singapore",0.4172,False,0.00558924674987793,SUCCESS
+TEST-BOT-826C2108,Texas Tech Buyer Group 027,Volga Trade Exporter 046,64974.54959412735,"Hamburg, Germany",0.5084,True,0.009000062942504883,SUCCESS
+TEST-BOT-BA136600,Paris Luxury Buyer Group 039,Siberian Tech Manufacturing 032,29197.18778602004,"Hamburg, Germany",0.3059,False,0.009446859359741211,SUCCESS
+TEST-BOT-4824EBA9,Shanghai Trade Sourcing 048,Tokyo Electronics Exporter 006,60285.30840676462,"Singapore, Singapore",0.5084,True,0.00941324234008789,SUCCESS
+TEST-BOT-0B732220,Moscow Heavy Ind. Procurement 034,Moscow Heavy Ind. Factory 031,63948.02446153907,"Hamburg, Germany",0.5084,True,0.011681318283081055,SUCCESS
+TEST-BOT-37B2D3F8,Volga Trade Importer 033,Berlin Industrial Supplier 037,25600.87255243381,"Dubai, UAE",0.3291,False,0.00866389274597168,SUCCESS
+TEST-BOT-2CEAC1EE,Siberian Tech Buyer Group 035,Shanghai Trade Supplier 045,10404.420108426095,"Rotterdam, Netherlands",0.3847,False,0.005339145660400391,SUCCESS
+TEST-BOT-489688E2,Tokyo Electronics Importer 025,California Cyber Exporter 010,19724.688317255223,"Rotterdam, Netherlands",0.3539,False,0.012840032577514648,SUCCESS
+TEST-BOT-D4AF7313,Shenzhen Innovation Procurement 046,California Cyber Exporter 026,418124.2128425132,"Pyongyang, DPRK (Sanctioned)",0.5084,True,0.016514062881469727,SUCCESS
+TEST-BOT-8223DA28,Guangzhou Manufacturing Buyer Group 047,Guangzhou Manufacturing Manufacturing 028,366970.97165088734,"Pyongyang, DPRK (Sanctioned)",0.5084,True,0.011124849319458008,SUCCESS
+TEST-BOT-7C5BD96B,Texas Tech Buyer Group 043,Osaka Parts Factory 023,45608.59992971206,"Dubai, UAE",0.3983,False,0.014552593231201172,SUCCESS
+TEST-BOT-A87E2CB0,Texas Tech Buyer Group 043,Berlin Industrial Supplier 021,428108.66355517355,Unknown Dark Web Node,0.5084,True,0.027549266815185547,SUCCESS
+TEST-BOT-F710A653,Paris Luxury Buyer Group 039,NY Global LLC Supplier 025,72057.34201796647,"Singapore, Singapore",0.5084,True,0.010094165802001953,SUCCESS
+TEST-BOT-6A3A9577,Moscow Heavy Ind. Procurement 034,Osaka Parts Factory 007,70441.2760538961,"Hamburg, Germany",0.5084,True,0.011511087417602539,SUCCESS
+TEST-BOT-C7A9E87A,Paris Luxury Buyer Group 039,Shenzhen Innovation Factory 011,42225.39186992181,"Dubai, UAE",0.3832,False,0.024145841598510742,SUCCESS
+TEST-BOT-AB1204CC,Texas Tech Buyer Group 027,Guangzhou Manufacturing Manufacturing 012,73853.92646077968,"Hamburg, Germany",0.5084,True,0.012145280838012695,SUCCESS
+TEST-BOT-F9FCC665,Osaka Parts Procurement 010,Berlin Industrial Supplier 005,45334.00710141569,"Los Angeles, USA",0.3952,False,0.00912022590637207,SUCCESS
+TEST-BOT-E52B38F6,Berlin Industrial Sourcing 024,NY Global LLC Supplier 009,34955.267147061895,"Hamburg, Germany",0.3572,False,0.024149179458618164,SUCCESS
+TEST-BOT-45B51FCD,Osaka Parts Procurement 010,Berlin Industrial Supplier 005,348941.1895279597,Unknown Dark Web Node,0.5084,True,0.009601116180419922,SUCCESS
+TEST-BOT-906AE1B3,NY Global LLC Sourcing 044,Texas Tech Manufacturing 008,24241.32036147281,"Hamburg, Germany",0.3344,False,0.009407281875610352,SUCCESS
+TEST-BOT-39EB8DC7,Moscow Heavy Ind. Procurement 034,Paris Luxury Manufacturing 020,272780.4328221829,Unknown Dark Web Node,0.5084,True,0.0074079036712646484,SUCCESS
+TEST-BOT-DEB7AB3C,Shanghai Trade Sourcing 032,Bavaria Auto Factory 019,29454.61768876814,"Singapore, Singapore",0.3075,False,0.6512627601623535,SUCCESS
+TEST-BOT-FB633785,Paris Luxury Buyer Group 039,Guangzhou Manufacturing Manufacturing 044,14148.918703550255,"Singapore, Singapore",0.375,False,0.005805015563964844,SUCCESS
+TEST-BOT-6F6A6BE6,Berlin Industrial Sourcing 008,London General Supplier 033,28394.362196877664,"Rotterdam, Netherlands",0.3081,False,0.06056380271911621,SUCCESS
+TEST-BOT-BF4B990A,Guangzhou Manufacturing Buyer Group 031,Volga Trade Exporter 014,29625.275092494696,"Dubai, UAE",0.3067,False,0.00677800178527832,SUCCESS
+TEST-BOT-8878DCAC,Oxford Textiles Importer 037,California Cyber Exporter 026,25644.11041236073,"Singapore, Singapore",0.3265,False,0.005730390548706055,SUCCESS
+TEST-BOT-DEB4C7EB,Berlin Industrial Sourcing 040,NY Global LLC Supplier 025,47695.86278500604,"Dubai, UAE",0.3995,False,0.0063784122467041016,SUCCESS
+TEST-BOT-D57704D5,Volga Trade Importer 001,Texas Tech Manufacturing 008,34570.91205844112,"Los Angeles, USA",0.3535,False,0.006767988204956055,SUCCESS
+TEST-BOT-51D22A49,Siberian Tech Buyer Group 035,Berlin Industrial Supplier 037,40716.86304739936,"Hamburg, Germany",0.3771,False,0.00820779800415039,SUCCESS
+TEST-BOT-FE16CECB,Oxford Textiles Importer 005,Siberian Tech Manufacturing 016,10804.269974395027,"Hamburg, Germany",0.3807,False,0.010147571563720703,SUCCESS
+TEST-BOT-1EBADDBB,Shanghai Trade Sourcing 032,Osaka Parts Factory 039,57992.44574897663,"Los Angeles, USA",0.4615,False,0.008993387222290039,SUCCESS
+TEST-BOT-58D8081E,Texas Tech Buyer Group 043,Moscow Heavy Ind. Factory 015,13012.18097279577,"Los Angeles, USA",0.3767,False,0.011101245880126953,SUCCESS
+TEST-BOT-E0A970F5,Moscow Heavy Ind. Procurement 018,Moscow Heavy Ind. Factory 015,17576.464956953718,"Hamburg, Germany",0.362,False,0.01239919662475586,SUCCESS
+TEST-BOT-03DEF4AF,California Cyber Importer 029,California Cyber Exporter 010,74157.83581592169,"Los Angeles, USA",0.5084,True,0.014543771743774414,SUCCESS
+TEST-BOT-00F14516,Bavaria Auto Procurement 022,NY Global LLC Supplier 025,57627.014040928094,"Dubai, UAE",0.4507,False,0.06114959716796875,SUCCESS
+TEST-BOT-E4BD2D11,Shenzhen Innovation Procurement 030,California Cyber Exporter 042,68762.04966081567,"Los Angeles, USA",0.5084,True,0.013360023498535156,SUCCESS
+TEST-BOT-4AC5704C,NY Global LLC Sourcing 012,Berlin Industrial Supplier 037,74717.91901494932,"Singapore, Singapore",0.5084,True,0.042391061782836914,SUCCESS
+TEST-BOT-A738520F,Oxford Textiles Importer 037,Moscow Heavy Ind. Factory 015,10595.751678234083,"Hamburg, Germany",0.3837,False,0.006501913070678711,SUCCESS
+TEST-BOT-053C22DE,Paris Luxury Buyer Group 039,Guangzhou Manufacturing Manufacturing 012,68028.64272383816,"Dubai, UAE",0.5084,True,0.008384227752685547,SUCCESS
+TEST-BOT-C81AAAF5,Oxford Textiles Importer 005,Bavaria Auto Factory 003,34815.063369139774,"Los Angeles, USA",0.3572,False,0.006062507629394531,SUCCESS
+TEST-BOT-37967CAC,Shanghai Trade Sourcing 016,Guangzhou Manufacturing Manufacturing 028,334489.2548871737,Unknown Dark Web Node,0.5084,True,0.007905006408691406,SUCCESS
+TEST-BOT-3CC9A4D0,Bavaria Auto Procurement 006,Osaka Parts Factory 007,35856.34898446157,"Los Angeles, USA",0.357,False,0.04024028778076172,SUCCESS
+TEST-BOT-C6129BBA,Berlin Industrial Sourcing 008,Bavaria Auto Factory 019,20180.527537809132,"Singapore, Singapore",0.3548,False,0.009926795959472656,SUCCESS
+TEST-BOT-DC2F22B2,California Cyber Importer 013,Shenzhen Innovation Factory 011,7308.436591518462,"Rotterdam, Netherlands",0.4699,False,0.010993003845214844,SUCCESS
+TEST-BOT-A2F3909F,California Cyber Importer 013,Texas Tech Manufacturing 024,11151.597837014238,"Rotterdam, Netherlands",0.3785,False,0.010812044143676758,SUCCESS
+TEST-BOT-87E62B58,Moscow Heavy Ind. Procurement 018,Bavaria Auto Factory 003,68244.98611485114,"Los Angeles, USA",0.5084,True,0.013283729553222656,SUCCESS
+TEST-BOT-2C958F96,NY Global LLC Sourcing 044,Siberian Tech Manufacturing 048,347938.67456637137,"Pyongyang, DPRK (Sanctioned)",0.5084,True,0.04233574867248535,SUCCESS
+TEST-BOT-C2D06CD6,NY Global LLC Sourcing 012,Tokyo Electronics Exporter 022,47395.45051082376,"Los Angeles, USA",0.3995,False,0.011974811553955078,SUCCESS
+TEST-BOT-CD06C0F9,Guangzhou Manufacturing Buyer Group 015,NY Global LLC Supplier 041,39415.4459459559,"Rotterdam, Netherlands",0.3769,False,0.012284517288208008,SUCCESS
+TEST-BOT-7F2A2D21,Osaka Parts Procurement 026,Paris Luxury Manufacturing 004,65720.48327658376,"Hamburg, Germany",0.5084,True,0.015145063400268555,SUCCESS
+TEST-BOT-48C7F680,Bavaria Auto Procurement 022,Osaka Parts Factory 007,65011.003881925215,"Rotterdam, Netherlands",0.5084,True,0.02729201316833496,SUCCESS
+TEST-BOT-A49C6E58,Oxford Textiles Importer 021,Oxford Textiles Exporter 018,25645.182593903846,"Los Angeles, USA",0.3265,False,0.03915572166442871,SUCCESS
+TEST-BOT-D02E28AF,Oxford Textiles Importer 005,Texas Tech Manufacturing 040,9622.244922345326,"Los Angeles, USA",0.3937,False,0.005516529083251953,SUCCESS
+TEST-BOT-79DC3581,Shenzhen Innovation Procurement 030,Texas Tech Manufacturing 040,62947.95071824246,"Singapore, Singapore",0.5084,True,0.012735843658447266,SUCCESS
+TEST-BOT-3F866036,Moscow Heavy Ind. Procurement 034,Shenzhen Innovation Factory 043,70490.8126244868,"Rotterdam, Netherlands",0.5084,True,0.04157114028930664,SUCCESS
+TEST-BOT-2D7573F3,Volga Trade Importer 049,Bavaria Auto Factory 003,49683.66215524035,"Dubai, UAE",0.3924,False,0.18425941467285156,SUCCESS
+TEST-BOT-5B634677,London General Sourcing 020,Guangzhou Manufacturing Manufacturing 044,298576.0288944441,Unknown Dark Web Node,0.5084,True,0.011075258255004883,SUCCESS
+TEST-BOT-B4459011,Guangzhou Manufacturing Buyer Group 015,Tokyo Electronics Exporter 038,79429.73933098602,"Dubai, UAE",0.5084,True,0.012978315353393555,SUCCESS
+TEST-BOT-A073008E,Shenzhen Innovation Procurement 046,Moscow Heavy Ind. Factory 031,31016.5386481446,"Singapore, Singapore",0.3174,False,0.00877070426940918,SUCCESS
+TEST-BOT-582FB662,Oxford Textiles Importer 005,Tokyo Electronics Exporter 006,39871.28990294963,"Rotterdam, Netherlands",0.374,False,0.014123916625976562,SUCCESS
+TEST-BOT-8D9B0A26,London General Sourcing 004,Tokyo Electronics Exporter 006,15501.902232133594,"Rotterdam, Netherlands",0.3667,False,0.009085893630981445,SUCCESS
+TEST-BOT-7F3A7728,Paris Luxury Buyer Group 023,NY Global LLC Supplier 041,26202.501012158245,"Rotterdam, Netherlands",0.3256,False,0.008698463439941406,SUCCESS
+TEST-BOT-97C45363,Texas Tech Buyer Group 027,Osaka Parts Factory 039,56200.39426829685,"Singapore, Singapore",0.4365,False,0.013121366500854492,SUCCESS
+TEST-BOT-49BCA39D,Moscow Heavy Ind. Procurement 034,Volga Trade Exporter 014,32553.80821853986,"Dubai, UAE",0.3432,False,0.005822896957397461,SUCCESS
+TEST-BOT-B9F010B4,Bavaria Auto Procurement 038,Guangzhou Manufacturing Manufacturing 012,44171.56899132483,"Rotterdam, Netherlands",0.3954,False,0.0057621002197265625,SUCCESS
+TEST-BOT-BD4AB2B6,California Cyber Importer 029,Siberian Tech Manufacturing 032,53354.68761967827,"Dubai, UAE",0.4172,False,0.015646696090698242,SUCCESS
+TEST-BOT-ED8D3154,Guangzhou Manufacturing Buyer Group 031,London General Supplier 033,26343.143442232828,"Dubai, UAE",0.3241,False,0.005224704742431641,SUCCESS
+TEST-BOT-0997F5F4,Shenzhen Innovation Procurement 030,Shenzhen Innovation Factory 043,6042.715642657049,"Dubai, UAE",0.4931,False,0.0062601566314697266,SUCCESS
+TEST-BOT-5B50DEDD,Tokyo Electronics Importer 041,Oxford Textiles Exporter 050,48737.14792081334,"Dubai, UAE",0.3997,False,0.23494839668273926,SUCCESS
+TEST-BOT-BF31281B,Bavaria Auto Procurement 022,Berlin Industrial Supplier 037,52776.272482635875,"Rotterdam, Netherlands",0.415,False,0.007600307464599609,SUCCESS
+TEST-BOT-91B170C3,Volga Trade Importer 017,Moscow Heavy Ind. Factory 015,437509.9356848465,"Pyongyang, DPRK (Sanctioned)",0.5084,True,0.008893013000488281,SUCCESS
+TEST-BOT-B1DB90CF,Shenzhen Innovation Procurement 014,Siberian Tech Manufacturing 016,38308.967461027736,"Singapore, Singapore",0.3709,False,0.008675813674926758,SUCCESS
+TEST-BOT-4AB2DE9B,NY Global LLC Sourcing 012,Volga Trade Exporter 030,42553.97081621313,"Los Angeles, USA",0.3864,False,0.005886554718017578,SUCCESS
+TEST-BOT-74975DD3,Osaka Parts Procurement 026,California Cyber Exporter 042,76676.65198531462,"Singapore, Singapore",0.5084,True,0.008423089981079102,SUCCESS
+TEST-BOT-5723FE0D,London General Sourcing 020,Berlin Industrial Supplier 037,37547.92946527896,"Los Angeles, USA",0.3658,False,0.009363889694213867,SUCCESS
+TEST-BOT-D8A03B90,Bavaria Auto Procurement 006,Oxford Textiles Exporter 018,52027.56739096187,"Los Angeles, USA",0.4093,False,0.009338855743408203,SUCCESS
+TEST-BOT-0ADDA6D3,Bavaria Auto Procurement 006,Shenzhen Innovation Factory 027,33956.396335372774,"Los Angeles, USA",0.3505,False,0.010848283767700195,SUCCESS
+TEST-BOT-852D92E2,Tokyo Electronics Importer 041,Berlin Industrial Supplier 005,26863.801389938246,"Singapore, Singapore",0.3175,False,0.008330821990966797,SUCCESS
+TEST-BOT-B04AE6AB,London General Sourcing 036,Tokyo Electronics Exporter 006,44967.03742355715,"Singapore, Singapore",0.3972,False,0.0051953792572021484,SUCCESS
+TEST-BOT-3463464F,Siberian Tech Buyer Group 035,Tokyo Electronics Exporter 022,32848.77616992584,"Singapore, Singapore",0.345,False,0.005372762680053711,SUCCESS
+TEST-BOT-4828C73D,Siberian Tech Buyer Group 019,Volga Trade Exporter 014,29560.702491146498,"Rotterdam, Netherlands",0.3067,False,0.005595207214355469,SUCCESS
+TEST-BOT-076945EE,NY Global LLC Sourcing 028,London General Supplier 049,14834.507939795318,"Los Angeles, USA",0.3741,False,0.004891872406005859,SUCCESS
+TEST-BOT-BB1D1CF6,Paris Luxury Buyer Group 023,London General Supplier 017,67173.14422837722,"Dubai, UAE",0.5084,True,0.006927490234375,SUCCESS
+TEST-BOT-FB2A982A,Siberian Tech Buyer Group 003,Siberian Tech Manufacturing 016,12212.50769673746,"Singapore, Singapore",0.3741,False,0.008277654647827148,SUCCESS
+TEST-BOT-FDA52C0F,Moscow Heavy Ind. Procurement 034,Texas Tech Manufacturing 008,46389.41756677443,"Dubai, UAE",0.3983,False,0.006642818450927734,SUCCESS
+TEST-BOT-F69CDE85,Moscow Heavy Ind. Procurement 034,Paris Luxury Manufacturing 020,350071.3978157548,"Pyongyang, DPRK (Sanctioned)",0.5084,True,0.007924079895019531,SUCCESS
+TEST-BOT-32ECAD48,Tokyo Electronics Importer 025,Oxford Textiles Exporter 034,28883.71702926526,"Los Angeles, USA",0.3089,False,0.008571147918701172,SUCCESS
+TEST-BOT-302FCF35,California Cyber Importer 029,Siberian Tech Manufacturing 048,29019.9802375423,"Dubai, UAE",0.3057,False,0.0067424774169921875,SUCCESS
+TEST-BOT-5A7711A4,Siberian Tech Buyer Group 003,California Cyber Exporter 042,62593.17230959475,"Los Angeles, USA",0.5084,True,0.008756637573242188,SUCCESS
+TEST-BOT-B6012491,Oxford Textiles Importer 037,Moscow Heavy Ind. Factory 031,63116.46082824372,"Dubai, UAE",0.5084,True,0.012634754180908203,SUCCESS
+TEST-BOT-F358A4A8,Moscow Heavy Ind. Procurement 050,Bavaria Auto Factory 019,57434.43566820707,"Los Angeles, USA",0.4507,False,0.02441716194152832,SUCCESS
+TEST-BOT-7C1D3BD6,Osaka Parts Procurement 026,California Cyber Exporter 042,58961.38744503086,"Rotterdam, Netherlands",0.4847,False,0.005228281021118164,SUCCESS
+TEST-BOT-5CC03CF9,Volga Trade Importer 033,Texas Tech Manufacturing 024,68358.52513854996,"Rotterdam, Netherlands",0.5084,True,0.0071086883544921875,SUCCESS
+TEST-BOT-D92C90E4,Berlin Industrial Sourcing 024,Volga Trade Exporter 014,18132.542685097134,"Los Angeles, USA",0.3589,False,0.00806879997253418,SUCCESS
+TEST-BOT-D9A0E80B,Moscow Heavy Ind. Procurement 034,Oxford Textiles Exporter 050,41084.262180315476,"Los Angeles, USA",0.3771,False,0.0061779022216796875,SUCCESS
+TEST-BOT-D38B7443,Tokyo Electronics Importer 025,Osaka Parts Factory 007,79170.02874125216,"Los Angeles, USA",0.5084,True,0.008907318115234375,SUCCESS
+TEST-BOT-98B7D440,Moscow Heavy Ind. Procurement 002,California Cyber Exporter 042,498371.89169941493,Unknown Dark Web Node,0.5084,True,0.01119685173034668,SUCCESS
+TEST-BOT-F87AB600,Siberian Tech Buyer Group 003,Volga Trade Exporter 046,51452.80549027766,"Rotterdam, Netherlands",0.4028,False,0.03898954391479492,SUCCESS
+TEST-BOT-7A66F8ED,Siberian Tech Buyer Group 035,NY Global LLC Supplier 009,24440.42405906322,"Singapore, Singapore",0.3332,False,0.004931211471557617,SUCCESS
+TEST-BOT-A3D70B7F,Volga Trade Importer 049,Berlin Industrial Supplier 037,22189.959568694725,"Rotterdam, Netherlands",0.3455,False,0.0054950714111328125,SUCCESS
+TEST-BOT-A86CAAFD,London General Sourcing 036,Berlin Industrial Supplier 021,21962.865734166266,"Hamburg, Germany",0.3466,False,0.006083011627197266,SUCCESS
+TEST-BOT-98D7B192,Moscow Heavy Ind. Procurement 034,Bavaria Auto Factory 019,42442.74680665092,"Singapore, Singapore",0.3864,False,0.006651401519775391,SUCCESS
+TEST-BOT-77B41C79,California Cyber Importer 045,Berlin Industrial Supplier 005,32108.362494620287,"Hamburg, Germany",0.3353,False,0.005303859710693359,SUCCESS
+TEST-BOT-FC9E5E3D,California Cyber Importer 045,London General Supplier 033,393598.38076825556,"Pyongyang, DPRK (Sanctioned)",0.5084,True,0.008879423141479492,SUCCESS
+TEST-BOT-1155FCFE,California Cyber Importer 045,Guangzhou Manufacturing Manufacturing 028,25764.063106697555,"Hamburg, Germany",0.3292,False,0.03884410858154297,SUCCESS
+TEST-BOT-B3FFEFB2,NY Global LLC Sourcing 028,Texas Tech Manufacturing 024,317435.0002463705,"Pyongyang, DPRK (Sanctioned)",0.5084,True,0.007860183715820312,SUCCESS
+TEST-BOT-C8528720,Guangzhou Manufacturing Buyer Group 047,California Cyber Exporter 010,282029.83476973115,"Pyongyang, DPRK (Sanctioned)",0.5084,True,0.008359193801879883,SUCCESS
+TEST-BOT-1084657C,Paris Luxury Buyer Group 039,Oxford Textiles Exporter 050,37563.45211929851,"Dubai, UAE",0.3658,False,0.010035991668701172,SUCCESS
+TEST-BOT-D190E188,Shenzhen Innovation Procurement 014,Volga Trade Exporter 046,15072.126187968328,"Singapore, Singapore",0.3718,False,0.006586313247680664,SUCCESS
+TEST-BOT-37EFF7F5,Guangzhou Manufacturing Buyer Group 031,Guangzhou Manufacturing Manufacturing 044,385485.980023711,"Pyongyang, DPRK (Sanctioned)",0.5084,True,0.007880687713623047,SUCCESS
+TEST-BOT-C3D59AA5,California Cyber Importer 029,Osaka Parts Factory 039,12862.8345564611,"Dubai, UAE",0.3757,False,0.013856887817382812,SUCCESS
+TEST-BOT-CDE08BEA,Osaka Parts Procurement 010,California Cyber Exporter 042,8271.063229354448,"Los Angeles, USA",0.4346,False,0.00656580924987793,SUCCESS
+TEST-BOT-26A9C286,Volga Trade Importer 033,Volga Trade Exporter 030,67872.06263532522,"Los Angeles, USA",0.5084,True,0.08553647994995117,SUCCESS
+TEST-BOT-7C73A2F8,Oxford Textiles Importer 005,Shenzhen Innovation Factory 027,25645.558565067222,"Hamburg, Germany",0.3265,False,0.005430459976196289,SUCCESS
+TEST-BOT-1339F780,Siberian Tech Buyer Group 019,Shanghai Trade Supplier 029,38904.90154507009,"Dubai, UAE",0.373,False,0.006187915802001953,SUCCESS
+TEST-BOT-F310AF74,Volga Trade Importer 049,Berlin Industrial Supplier 005,63275.726986848436,"Rotterdam, Netherlands",0.5084,True,0.008135080337524414,SUCCESS
+TEST-BOT-A0204013,Paris Luxury Buyer Group 039,Siberian Tech Manufacturing 016,63665.66534628764,"Los Angeles, USA",0.5084,True,0.010206937789916992,SUCCESS
+TEST-BOT-7FB1A914,Moscow Heavy Ind. Procurement 002,London General Supplier 017,70595.04355407512,"Rotterdam, Netherlands",0.5084,True,0.01089024543762207,SUCCESS
+TEST-BOT-D42603C0,Shenzhen Innovation Procurement 046,Paris Luxury Manufacturing 036,17216.058137588872,"Los Angeles, USA",0.362,False,0.007711172103881836,SUCCESS
+TEST-BOT-8C8E32EB,Berlin Industrial Sourcing 040,Oxford Textiles Exporter 034,45566.74961252113,"Singapore, Singapore",0.3983,False,0.010171175003051758,SUCCESS
+TEST-BOT-3CD4B3B1,Moscow Heavy Ind. Procurement 050,NY Global LLC Supplier 041,14984.815890686714,"Rotterdam, Netherlands",0.3731,False,0.010859966278076172,SUCCESS
+TEST-BOT-66B2D901,NY Global LLC Sourcing 044,Moscow Heavy Ind. Factory 015,44587.856036857214,"Dubai, UAE",0.3974,False,0.007552146911621094,SUCCESS
+TEST-BOT-2B804D8C,Shanghai Trade Sourcing 016,NY Global LLC Supplier 009,49174.90870896572,"Singapore, Singapore",0.3956,False,0.008422136306762695,SUCCESS
+TEST-BOT-8A49BFED,Oxford Textiles Importer 021,Volga Trade Exporter 014,28331.994532327302,"Singapore, Singapore",0.3081,False,0.009153127670288086,SUCCESS
+TEST-BOT-69B3F860,Shenzhen Innovation Procurement 030,Texas Tech Manufacturing 008,56398.27889069291,"Dubai, UAE",0.4377,False,0.010483503341674805,SUCCESS
+TEST-BOT-41F54795,Tokyo Electronics Importer 009,London General Supplier 049,31298.601482740112,"Singapore, Singapore",0.3226,False,0.05859375,SUCCESS
+TEST-BOT-3860D5EA,Moscow Heavy Ind. Procurement 034,Paris Luxury Manufacturing 036,61429.75519032833,"Hamburg, Germany",0.5084,True,0.00995945930480957,SUCCESS
+TEST-BOT-40C2F41A,Berlin Industrial Sourcing 008,Siberian Tech Manufacturing 032,20444.36119264082,"Los Angeles, USA",0.3559,False,0.01073598861694336,SUCCESS
+TEST-BOT-D8C04A9E,Bavaria Auto Procurement 022,Tokyo Electronics Exporter 022,431783.8584851726,Unknown Dark Web Node,0.5084,True,0.010429143905639648,SUCCESS
+TEST-BOT-A305D4D1,Texas Tech Buyer Group 027,Siberian Tech Manufacturing 016,43353.755977716275,"Dubai, UAE",0.3907,False,0.008645057678222656,SUCCESS
+TEST-BOT-53BF3C06,Moscow Heavy Ind. Procurement 002,Tokyo Electronics Exporter 006,36572.9164413035,"Singapore, Singapore",0.3618,False,0.00582575798034668,SUCCESS
+TEST-BOT-B3DCBB02,Shanghai Trade Sourcing 048,Oxford Textiles Exporter 018,57794.54132038307,"Los Angeles, USA",0.4554,False,0.023447751998901367,SUCCESS
+TEST-BOT-F182C326,Paris Luxury Buyer Group 039,Oxford Textiles Exporter 002,39054.44032218564,"Dubai, UAE",0.374,False,0.00902700424194336,SUCCESS
+TEST-BOT-BDC8D571,Oxford Textiles Importer 021,London General Supplier 001,20985.08561706195,"Hamburg, Germany",0.3538,False,0.008590221405029297,SUCCESS
+TEST-BOT-BF69693A,Moscow Heavy Ind. Procurement 050,NY Global LLC Supplier 025,78241.15408877368,"Los Angeles, USA",0.5084,True,0.008849859237670898,SUCCESS
+TEST-BOT-0A9D3C67,Volga Trade Importer 049,Volga Trade Exporter 046,20657.080540388888,"Rotterdam, Netherlands",0.3559,False,0.023561954498291016,SUCCESS
+TEST-BOT-0B025576,Moscow Heavy Ind. Procurement 034,Shanghai Trade Supplier 013,54816.44541385997,"Dubai, UAE",0.4276,False,0.006398677825927734,SUCCESS

@@ -4,41 +4,34 @@ import (
 	"b2b_backend/initializers"
 	"b2b_backend/models"
 	"net/http"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 )
 
-// RegisterUserInput 定义请求参数结构
-type RegisterUserInput struct {
-	WalletAddress string `json:"wallet_address" binding:"required"`
-	Role          string `json:"role" binding:"required,oneof=BUYER SELLER"`
+func Ping(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"message": "pong"})
 }
 
-// RegisterUser 注册或获取用户
-func RegisterUser(c *gin.Context) {
-	var input RegisterUserInput
-	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	// 强制地址转小写，确保存储一致性
-	address := strings.ToLower(input.WalletAddress)
-
-	var user models.User
-	// 查找是否已存在，不存在则创建 (FirstOrCreate)
-	result := initializers.DB.Where(models.User{WalletAddress: address}).
-		Attrs(models.User{Role: input.Role}).
-		FirstOrCreate(&user)
-
-	if result.Error != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Database error"})
-		return
-	}
-
+func GetUsers(c *gin.Context) {
+	var users []models.User
+	initializers.DB.Find(&users)
 	c.JSON(http.StatusOK, gin.H{
-		"message": "User registered/retrieved successfully",
-		"user":    user,
+		"success": true,
+		"data":    users,
 	})
+}
+
+// 【新增】：超级管理员解锁被 AI 封禁的账户 (HITL)
+func UnlockUser(c *gin.Context) {
+	userID := c.Param("id")
+
+	// 将用户的健康状态强制重置为 ACTIVE
+	result := initializers.DB.Model(&models.User{}).Where("id = ?", userID).Update("health_status", "ACTIVE")
+
+	if result.Error != nil || result.RowsAffected == 0 {
+		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "error": "解锁失败或用户不存在"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "账户已恢复健康状态"})
 }
