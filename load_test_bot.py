@@ -7,8 +7,8 @@ import uuid
 
 # --- 配置区 ---
 BACKEND_URL = "http://127.0.0.1:8080/api"
-TOTAL_TRANSACTIONS = 500  # 建议先跑500笔测试，论文压测时可改为10000
-CONCURRENT_THREADS = 5    # 并发线程数，模拟多人同时操作
+TOTAL_TRANSACTIONS = 2000  # 🌟 改为 2000 笔（足够跑出极佳的数据分布，耗时约1~2分钟）
+CONCURRENT_THREADS = 50    # 🌟 改为 50 并发（相当于 50 个黑客/企业同时在操作）
 OUTPUT_FILE = "simulated_trade_data.csv"
 
 # 目的地池（含高危节点）
