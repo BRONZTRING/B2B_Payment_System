@@ -39,7 +39,10 @@ func main() {
 		api.GET("/orders", controllers.GetOrders)
 		api.POST("/orders", controllers.CreateOrder)
 		api.PUT("/orders/:id/status", controllers.UpdateOrderStatus)
-		api.PUT("/orders/:id/finance", controllers.FinanceOrder) // 新增：供应链保理接口
+		api.PUT("/orders/:id/finance", controllers.FinanceOrder)
+
+		// 🌟 新增：论文实验数据专属导出通道
+		api.POST("/export-thesis", controllers.ExportThesisData)
 	}
 
 	port := os.Getenv("PORT")
