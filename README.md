@@ -116,4 +116,4 @@ B2B_Payment_System/
 
 本项目不仅是计算机软件工程的落地实践，更是针对国际政治经济学“去中心化多边贸易基础设施”的架构级论证。系统生成的测试数据与拓扑模型，仅供学术防真验证使用。
 
-Architected & Developed by [您的名字/GitHub ID]# B2B Cross-Border Payment System
+Architected & Developed by [DONGAO/BRONZTRING]# B2B Cross-Border Payment System
