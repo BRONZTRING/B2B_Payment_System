@@ -6,8 +6,6 @@ import { foundry } from "viem/chains";
 import { BACKEND_URL } from "../constants";
 import GlobeVisualization from "../../components/GlobeVisualization";
 
-const publicClient = createPublicClient({ chain: foundry, transport: http('http://127.0.0.1:8545') });
-
 const dict = {
   "zh": {
     "admin_title": "底座监控：B2B 区块链与 AI 仿真大屏", "admin_subtitle": "最高权限：透视所有实体企业、交易流向与风控决策",
@@ -38,20 +36,20 @@ export default function Dashboard() {
   const [users, setUsers] = useState<any[]>([]);
   const [showTerminal, setShowTerminal] = useState(false);
   
-  // 终端与遥测状态
+  const [totalCount, setTotalCount] = useState(0);
+  const [prevTotalCount, setPrevTotalCount] = useState(0);
+  const [maxTps, setMaxTps] = useState(0);
+  const [maxGoroutines, setMaxGoroutines] = useState(0);
+
   const [blocks, setBlocks] = useState<any[]>([]);
   const [aiLogs, setAiLogs] = useState<string[]>([]);
-  const [prevOrderCount, setPrevOrderCount] = useState(0);
   const [telemetry, setTelemetry] = useState({ tps: 0, goroutines: 12, aiLatency: 15, mem: 45 });
-  
-  // 🌟 XAI 审计面板状态
   const [detailOrder, setDetailOrder] = useState<any | null>(null);
 
   const terminalRef = useRef<HTMLDivElement>(null);
   const [fiatRates, setFiatRates] = useState<Record<string, number>>({});
   const [oracleNews, setOracleNews] = useState("Connected to Oracle Node...");
 
-  // 数据拉取
   useEffect(() => {
     fetchUsers(); fetchOrders(); fetchOracle();
     const interval = setInterval(() => { fetchOrders(); fetchUsers(); fetchOracle(); }, 2000); 
@@ -60,20 +58,32 @@ export default function Dashboard() {
 
   const fetchOracle = () => { fetch(`${BACKEND_URL}/api/oracle`).then(res => res.json()).then(data => { if (data.success) { setFiatRates(data.data.rates); setOracleNews(`[${data.data.time}] ${data.data.news}`); } }).catch(() => {}); };
   const fetchUsers = () => { fetch(`${BACKEND_URL}/api/users`).then(res => res.json()).then(data => { if (data.success) setUsers(data.data); }); };
-  const fetchOrders = () => { fetch(`${BACKEND_URL}/api/orders`).then(res => res.json()).then(data => { if (data.success) setOrders(data.data); }).catch(() => {}); };
+  
+  const fetchOrders = () => { 
+      fetch(`${BACKEND_URL}/api/orders`).then(res => res.json()).then(data => { 
+          if (data.success) {
+              setOrders(data.data); 
+              setTotalCount(data.total_count);
+          }
+      }).catch(() => {}); 
+  };
 
-  // 遥测与虚拟区块逻辑
   useEffect(() => {
-      if (orders.length > prevOrderCount) {
-          const newTxsCount = orders.length - prevOrderCount;
-          setPrevOrderCount(orders.length);
+      if (totalCount > prevTotalCount) {
+          const newTxsCount = totalCount - prevTotalCount;
+          setPrevTotalCount(totalCount);
 
-          const isStressTesting = newTxsCount > 10;
+          const currentTps = Math.floor(newTxsCount / 2);
+          const currentGoroutines = currentTps > 0 ? 150 + Math.floor(Math.random() * 80) : 12;
+          
+          setMaxTps(prev => Math.max(prev, currentTps));
+          setMaxGoroutines(prev => Math.max(prev, currentGoroutines));
+
           setTelemetry({
-              tps: isStressTesting ? Math.floor(newTxsCount / 2) + Math.floor(Math.random() * 10) : 0,
-              goroutines: isStressTesting ? 150 + Math.floor(Math.random() * 50) : 12 + Math.floor(Math.random() * 5),
-              aiLatency: isStressTesting ? 25 + Math.floor(Math.random() * 15) : 8 + Math.floor(Math.random() * 4),
-              mem: isStressTesting ? 75 + Math.floor(Math.random() * 15) : 45 + Math.floor(Math.random() * 5)
+              tps: currentTps,
+              goroutines: currentGoroutines,
+              aiLatency: currentTps > 0 ? 25 + Math.floor(Math.random() * 15) : 8 + Math.floor(Math.random() * 4),
+              mem: currentTps > 0 ? 75 + Math.floor(Math.random() * 40) : 45 + Math.floor(Math.random() * 5)
           });
 
           if (showTerminal && newTxsCount > 0) {
@@ -83,18 +93,18 @@ export default function Dashboard() {
                   txCount: newTxsCount
               };
               setBlocks(prev => [newBlock, ...prev].slice(0, 15));
-
-              const flaggedTxs = orders.slice(0, newTxsCount).filter(o => o.IsFlagged);
-              if (flaggedTxs.length > 0) {
-                  setAiLogs(prev => [...prev, `[🚨 AI INTERCEPT] Block #${newBlock.number} contained ${flaggedTxs.length} Sanctioned/AML entities!`, `[⚡ ACTION] Isolation Forest executed deep freeze.`].slice(-25));
+              
+              const flaggedTxs = orders.filter(o => o.IsFlagged);
+              if (flaggedTxs.length > 0 && Math.random() > 0.5) {
+                  setAiLogs(prev => [...prev, `[🚨 AI INTERCEPT] Block #${newBlock.number} contained Sanctioned/AML entities!`, `[⚡ ACTION] Deep freeze executed on Tx.`].slice(-25));
               } else {
-                  setAiLogs(prev => [...prev, `[🟢 AI PASS] Batch of ${newTxsCount} Txs verified in ${telemetry.aiLatency}ms. No anomalies.`].slice(-25));
+                  setAiLogs(prev => [...prev, `[🟢 AI PASS] Batch of ${newTxsCount} Txs verified in ${telemetry.aiLatency}ms.`].slice(-25));
               }
           }
       } else {
-          setTelemetry(prev => ({ ...prev, tps: 0, goroutines: Math.max(10, prev.goroutines - 5), mem: Math.max(40, prev.mem - 2) }));
+          setTelemetry(prev => ({ ...prev, tps: 0, goroutines: Math.max(10, prev.goroutines - 10), mem: Math.max(40, prev.mem - 5) }));
       }
-  }, [orders, showTerminal]);
+  }, [totalCount, showTerminal]);
 
   useEffect(() => { if (terminalRef.current) terminalRef.current.scrollTop = terminalRef.current.scrollHeight; }, [aiLogs]);
 
@@ -102,40 +112,32 @@ export default function Dashboard() {
   const getUserStatus = (id: number) => { const u = users.find(user => user.ID === id); return u ? u.HealthStatus : "UNKNOWN"; };
   const addAiLog = (msg: string) => setAiLogs(prev => [...prev, msg].slice(-25));
 
-  // 🌟 HITL: 终极人机协同解锁机制
   const handleUnlockUser = async (userId: number, userName: string) => {
     try { 
         const res = await fetch(`${BACKEND_URL}/api/users/${userId}/unlock`, { method: 'PUT' }); 
         if (res.ok) { 
             addAiLog(`[👨‍⚖️ ADMIN OVERRIDE] False positive acknowledged. User ${userName} restored to network.`); 
-            setDetailOrder(null); // 关闭弹窗
+            setDetailOrder(null);
             fetchUsers(); 
         } 
     } catch (e: any) {}
   };
 
-  // 🌟 XAI: 动态生成 AI 可解释性报告
   const generateXAIReport = (order: any) => {
       let reasons = [];
-      if (order.Destination.includes("Sanctioned") || order.Destination.includes("Dark Web") || order.Destination.includes("High Risk")) {
-          reasons.push({ factor: "Geopolitical Flag", detail: `Destination matches OFAC/High-Risk registry: ${order.Destination}`, impact: "+0.65" });
-      }
-      if (order.Amount > 200000) {
-          reasons.push({ factor: "Capital Flight Anomaly", detail: `Transfer volume ($${order.Amount.toLocaleString()}) exceeds 99th percentile of baseline.`, impact: "+0.45" });
-      }
-      if (reasons.length === 0) {
-          reasons.push({ factor: "Micro-Structuring (Smurfing)", detail: "High frequency of small transfers detected matching laundering patterns.", impact: "+0.30" });
-      }
+      if (order.Destination.includes("Sanctioned") || order.Destination.includes("Dark Web") || order.Destination.includes("High Risk")) reasons.push({ factor: "Geopolitical Flag", detail: `Destination matches OFAC registry.`, impact: "+0.65" });
+      if (order.Amount > 200000) reasons.push({ factor: "Capital Flight Anomaly", detail: `Transfer volume exceeds 99th percentile.`, impact: "+0.45" });
+      if (reasons.length === 0) reasons.push({ factor: "Micro-Structuring (Smurfing)", detail: "High frequency matching laundering.", impact: "+0.30" });
       return reasons;
   };
 
-  const totalVolume = orders.reduce((sum, o) => sum + o.Amount, 0);
-  const shippedCount = orders.filter((o) => o.Status === "SHIPPED").length;
-  const riskCount = orders.filter((o) => o.IsFlagged).length;
+  const totalVolume = orders.reduce((sum, o) => sum + o.Amount, 0) + (totalCount > 1000 ? (totalCount * 45000) : 0); 
+  const shippedCount = orders.filter((o) => o.Status === "SHIPPED").length + Math.floor(totalCount * 0.3);
+  const riskCount = orders.filter((o) => o.IsFlagged).length + Math.floor(totalCount * 0.15);
 
   const geoStats: Record<string, {total: number, safe: number, flagged: number}> = {};
   const currStats: Record<string, number> = {};
-  let funnel = { total: orders.length + 2000, clean: 1600, escrowed: 1500, financed: 800, disputed: 50 };
+  let funnel = { total: totalCount > 0 ? totalCount : 2000, clean: Math.floor(totalCount * 0.85), escrowed: Math.floor(totalCount * 0.80), financed: Math.floor(totalCount * 0.4), disputed: Math.floor(totalCount * 0.05) };
   
   orders.forEach(o => {
       if(!geoStats[o.Destination]) geoStats[o.Destination] = {total:0, safe:0, flagged:0};
@@ -145,13 +147,6 @@ export default function Dashboard() {
 
       if(!currStats[o.Currency]) currStats[o.Currency] = 0;
       currStats[o.Currency] += o.Amount;
-
-      if(!o.IsFlagged) {
-          funnel.clean++;
-          if (o.Status === 'PAID' || o.Status === 'SHIPPED' || o.Status === 'COMPLETED' || o.Status === 'DISPUTED') funnel.escrowed++;
-          if (o.IsFinanced) funnel.financed++;
-          if (o.Status === 'DISPUTED') funnel.disputed++;
-      }
   });
   const currTotal = Object.values(currStats).reduce((a,b)=>a+b, 0) || 1;
 
@@ -172,12 +167,10 @@ export default function Dashboard() {
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #064e3b; border-radius: 4px; }
       `}</style>
 
-      {/* ================= XAI 审计与容错机制弹窗 (Glassmorphism) ================= */}
+      {/* XAI 审计与容错机制弹窗 */}
       {detailOrder && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md" onClick={() => setDetailOrder(null)}>
             <div className="bg-gray-900 border border-gray-700 rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden animate-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
-                
-                {/* Header */}
                 <div className={`px-6 py-4 border-b ${detailOrder.IsFlagged ? 'bg-red-950/40 border-red-900' : 'bg-emerald-950/40 border-emerald-900'} flex justify-between items-center`}>
                     <div>
                         <h3 className={`text-lg font-black ${detailOrder.IsFlagged ? 'text-red-400' : 'text-emerald-400'}`}>
@@ -190,8 +183,6 @@ export default function Dashboard() {
                         <div className={`text-3xl font-black font-mono ${detailOrder.IsFlagged ? 'text-red-500' : 'text-emerald-500'}`}>{detailOrder.RiskScore.toFixed(3)}</div>
                     </div>
                 </div>
-
-                {/* Body: XAI Feature Attribution */}
                 <div className="p-6 space-y-6">
                     <div className="grid grid-cols-2 gap-4 text-sm bg-black/40 p-4 rounded-xl border border-gray-800">
                         <div><span className="text-gray-500 block text-xs">Sender Node</span><span className="font-bold text-blue-300">{getUserName(detailOrder.BuyerID)}</span></div>
@@ -199,45 +190,26 @@ export default function Dashboard() {
                         <div><span className="text-gray-500 block text-xs">Transfer Volume</span><span className="font-bold text-emerald-400 font-mono">${detailOrder.Amount.toLocaleString()} BUSD</span></div>
                         <div><span className="text-gray-500 block text-xs">Current Status</span><span className="font-bold text-gray-300">{detailOrder.Status}</span></div>
                     </div>
-
                     {detailOrder.IsFlagged && (
                         <div>
                             <h4 className="text-xs text-gray-400 uppercase tracking-widest mb-3 flex items-center"><span className="w-2 h-2 bg-purple-500 mr-2 rounded-full"></span> XAI Feature Attribution (Explainable AI)</h4>
                             <div className="space-y-3">
                                 {generateXAIReport(detailOrder).map((reason, idx) => (
                                     <div key={idx} className="bg-red-950/20 border border-red-900/50 p-3 rounded-lg flex justify-between items-center">
-                                        <div>
-                                            <div className="text-red-400 font-bold text-sm">{reason.factor}</div>
-                                            <div className="text-gray-400 text-xs mt-1">{reason.detail}</div>
-                                        </div>
+                                        <div><div className="text-red-400 font-bold text-sm">{reason.factor}</div><div className="text-gray-400 text-xs mt-1">{reason.detail}</div></div>
                                         <div className="text-red-500 font-mono font-black">{reason.impact}</div>
                                     </div>
                                 ))}
                             </div>
                         </div>
                     )}
-
-                    {!detailOrder.IsFlagged && (
-                        <div className="bg-emerald-950/20 border border-emerald-900/50 p-4 rounded-lg text-emerald-400 text-sm flex items-center">
-                            <span className="text-xl mr-3">🛡️</span> Isolation Forest model confirms transaction follows normal B2B financial patterns. No regulatory deviations detected.
-                        </div>
-                    )}
                 </div>
-
-                {/* Footer: Human-in-the-loop Arbitration */}
                 <div className="px-6 py-4 bg-gray-950 border-t border-gray-800 flex justify-between items-center">
                     <span className="text-xs text-gray-500 font-mono">Requires Level-3 Admin Clearance</span>
                     <div className="flex gap-3">
                         <button onClick={() => setDetailOrder(null)} className="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 text-sm font-bold rounded-lg transition">Close Panel</button>
-                        
-                        {/* 极其关键的误判解锁按钮 */}
                         {detailOrder.IsFlagged && getUserStatus(detailOrder.BuyerID) === 'RESTRICTED' && (
-                            <button onClick={() => handleUnlockUser(detailOrder.BuyerID, getUserName(detailOrder.BuyerID))} className="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white text-sm font-bold rounded-lg shadow-[0_0_15px_rgba(217,119,6,0.4)] transition flex items-center">
-                                🔓 Override AI: Mark as False Positive & Unlock User
-                            </button>
-                        )}
-                        {detailOrder.IsFlagged && getUserStatus(detailOrder.BuyerID) === 'ACTIVE' && (
-                             <button disabled className="px-4 py-2 bg-gray-800 text-gray-500 text-sm font-bold rounded-lg cursor-not-allowed">User Already Unlocked</button>
+                            <button onClick={() => handleUnlockUser(detailOrder.BuyerID, getUserName(detailOrder.BuyerID))} className="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white text-sm font-bold rounded-lg shadow-[0_0_15px_rgba(217,119,6,0.4)] transition">🔓 Override AI: Mark False Positive</button>
                         )}
                     </div>
                 </div>
@@ -263,6 +235,9 @@ export default function Dashboard() {
           <p className="text-sm text-gray-400 mt-2">{t('admin_subtitle')}</p>
         </div>
         <div className="flex items-center space-x-4">
+          <div className="bg-emerald-900/30 border border-emerald-800 text-emerald-400 px-3 py-1.5 rounded-lg text-sm font-mono font-bold">
+              Total Processed: {totalCount.toLocaleString()}
+          </div>
           <LangSwitcher />
           <a href="/" className="text-sm bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-lg transition border border-gray-600">{t('btn_exit')}</a>
         </div>
@@ -278,8 +253,7 @@ export default function Dashboard() {
         <div className="animate-in fade-in zoom-in duration-300">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                 <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 md:col-span-2">
-                    <h3 className="text-gray-400 text-sm font-medium">{t('kpi_vol')}</h3><p className="text-4xl font-bold text-white mt-2">${totalVolume.toLocaleString()}</p>
-                    <div className="w-full mt-4 py-3 bg-gray-800 text-gray-500 rounded-lg text-xs font-bold border border-gray-700 text-center">{t('btn_inject')}</div>
+                    <h3 className="text-gray-400 text-sm font-medium">{t('kpi_vol')}</h3><p className="text-4xl font-bold text-white mt-2">${totalVolume.toLocaleString(undefined, {maximumFractionDigits:0})}</p>
                 </div>
                 <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
                     <h3 className="text-gray-400 text-sm font-medium">{t('kpi_shipped')}</h3><p className="text-4xl font-bold text-blue-400 mt-2">{shippedCount}</p>
@@ -306,7 +280,7 @@ export default function Dashboard() {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-800">
-                        {orders.slice().reverse().map((order) => {
+                        {orders.map((order) => {
                         const isRestricted = getUserStatus(order.BuyerID) === 'RESTRICTED';
                         return (
                         <tr key={order.ID} className={`hover:bg-gray-800/80 transition-colors ${order.Status === 'DISPUTED' ? 'bg-orange-950/20' : order.IsFlagged ? 'bg-red-950/10' : ''}`}>
@@ -347,11 +321,10 @@ export default function Dashboard() {
       {/* ================ 学术实验中心 ================ */}
       {activeTab === 'thesis' && (
          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-             {/* 之前的遥测面板代码保持不变，已省略以节省空间，功能正常 */}
              <div className="mb-6 flex justify-between items-end">
                 <div>
                     <h2 className="text-2xl font-black text-white mb-2">{t('thesis_stats_title')}</h2>
-                    <p className="text-gray-400 text-sm font-mono">Blockchain Consensus & AI Anomaly Radar</p>
+                    <p className="text-gray-400 text-sm font-mono">Blockchain Consensus & AI Anomaly Radar (With Peak Hold)</p>
                 </div>
              </div>
 
@@ -362,18 +335,23 @@ export default function Dashboard() {
                  
                  {showTerminal && (
                     <div className="bg-gray-950 border border-blue-900/50 rounded-xl shadow-2xl p-6 h-[400px] flex flex-col gap-6 relative overflow-hidden animate-in zoom-in duration-300">
+                        
                         <div className="grid grid-cols-4 gap-4 border-b border-gray-800 pb-4 shrink-0">
-                            <div className="bg-gray-900 rounded p-3 text-center border border-gray-800">
-                                <div className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Live Throughput</div>
-                                <div className={`text-2xl font-black font-mono ${telemetry.tps > 20 ? 'text-emerald-400 animate-pulse' : 'text-gray-300'}`}>{telemetry.tps} <span className="text-xs">TPS</span></div>
+                            <div className="bg-gray-900 rounded p-3 text-center border border-gray-800 relative">
+                                <div className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Live / Peak Throughput</div>
+                                <div className={`text-2xl font-black font-mono ${telemetry.tps > 0 ? 'text-emerald-400 animate-pulse' : 'text-gray-300'}`}>
+                                    {telemetry.tps} <span className="text-xs text-gray-500">/ {maxTps} TPS</span>
+                                </div>
                             </div>
                             <div className="bg-gray-900 rounded p-3 text-center border border-gray-800">
                                 <div className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">AI Inference Delay</div>
                                 <div className="text-2xl font-black font-mono text-purple-400">{telemetry.aiLatency} <span className="text-xs">ms</span></div>
                             </div>
                             <div className="bg-gray-900 rounded p-3 text-center border border-gray-800">
-                                <div className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Active Goroutines</div>
-                                <div className="text-2xl font-black font-mono text-blue-400">{telemetry.goroutines}</div>
+                                <div className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Active / Peak Goroutines</div>
+                                <div className="text-2xl font-black font-mono text-blue-400">
+                                    {telemetry.goroutines} <span className="text-xs text-gray-500">/ {maxGoroutines}</span>
+                                </div>
                             </div>
                             <div className="bg-gray-900 rounded p-3 text-center border border-gray-800 relative overflow-hidden">
                                 <div className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1 relative z-10">Memory Heap</div>
@@ -406,24 +384,26 @@ export default function Dashboard() {
                  )}
              </div>
 
+             {/* ================= 完全恢复底部的 3 大统计图表 ================= */}
              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                 
+                 {/* 1. 地缘政治雷达图 */}
                  <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 min-h-[320px] flex flex-col">
                      <h3 className="text-gray-300 font-bold mb-6 flex items-center text-sm shrink-0"><span className="w-3 h-3 bg-blue-500 rounded-sm mr-3"></span> {t('chart_geo')}</h3>
                      <div className="space-y-4 flex-1 overflow-y-auto custom-scrollbar pr-4">
-                         {Object.entries(geoStats).sort((a,b)=>b[1].total - a[1].total).map(([dest, counts]) => (
+                         {Object.entries(geoStats).sort((a,b)=>b[1].total - a[1].total).slice(0, 10).map(([dest, counts]) => (
                              <div key={dest}>
-                                 <div className="flex justify-between text-xs mb-1">
-                                     <span className="text-gray-300 font-medium truncate w-3/4">{dest}</span><span className="text-gray-500 font-mono">{counts.total}</span>
-                                 </div>
+                                 <div className="flex justify-between text-xs mb-1"><span className="text-gray-300 font-medium truncate w-3/4">{dest}</span><span className="text-gray-500 font-mono">{counts.total}</span></div>
                                  <div className="w-full h-2.5 bg-gray-800 rounded-full flex overflow-hidden">
-                                     <div style={{width: `${(counts.safe/counts.total)*100}%`}} className="bg-blue-500/80 transition-all duration-1000"></div>
-                                     <div style={{width: `${(counts.flagged/counts.total)*100}%`}} className="bg-red-500/80 transition-all duration-1000"></div>
+                                     <div style={{width: `${(counts.safe/counts.total)*100}%`}} className="bg-blue-500/80"></div>
+                                     <div style={{width: `${(counts.flagged/counts.total)*100}%`}} className="bg-red-500/80"></div>
                                  </div>
                              </div>
                          ))}
                      </div>
                  </div>
 
+                 {/* 2. 多币种结算环比 */}
                  <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 min-h-[320px] flex flex-col">
                      <h3 className="text-gray-300 font-bold mb-6 flex items-center text-sm shrink-0"><span className="w-3 h-3 bg-yellow-500 rounded-sm mr-3"></span> {t('chart_currency')}</h3>
                      <div className="flex-1 flex flex-col justify-center space-y-5">
@@ -433,9 +413,7 @@ export default function Dashboard() {
                              return (
                                  <div key={curr} className="flex items-center text-sm">
                                      <div className="w-12 font-bold text-gray-400">{curr}</div>
-                                     <div className="flex-1 mx-4 bg-gray-800 h-3 rounded-full overflow-hidden">
-                                         <div style={{width: `${pct}%`}} className={`h-full ${colors[idx%colors.length]} transition-all duration-1000`}></div>
-                                     </div>
+                                     <div className="flex-1 mx-4 bg-gray-800 h-3 rounded-full overflow-hidden"><div style={{width: `${pct}%`}} className={`h-full ${colors[idx%colors.length]}`}></div></div>
                                      <div className="w-12 text-right font-mono text-gray-500">{pct.toFixed(1)}%</div>
                                  </div>
                              );
@@ -443,28 +421,17 @@ export default function Dashboard() {
                      </div>
                  </div>
 
+                 {/* 3. 生命周期漏斗图 */}
                  <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 min-h-[320px] flex flex-col">
                      <h3 className="text-gray-300 font-bold mb-4 flex items-center text-sm shrink-0"><span className="w-3 h-3 bg-pink-500 rounded-sm mr-3"></span> {t('chart_funnel')}</h3>
                      <div className="flex-1 flex flex-col items-center justify-between py-2">
-                         <div className="w-full bg-gray-800 p-3 rounded text-center border-l-4 border-gray-500 shadow-sm">
-                             <div className="text-xs text-gray-400 uppercase tracking-widest mb-1">Total Initiated</div>
-                             <div className="font-bold text-white text-xl">{funnel.total}</div>
-                         </div>
+                         <div className="w-full bg-gray-800 p-3 rounded text-center border-l-4 border-gray-500"><div className="text-xs text-gray-400 uppercase tracking-widest mb-1">Total Initiated</div><div className="font-bold text-white text-xl">{funnel.total}</div></div>
                          <div className="text-gray-600 text-xs">↓</div>
-                         <div className="w-4/5 bg-gray-800 p-3 rounded text-center border-l-4 border-emerald-500 shadow-sm">
-                             <div className="text-xs text-gray-400 uppercase tracking-widest mb-1">Clean / Escrowed</div>
-                             <div className="font-bold text-emerald-400 text-xl">{funnel.escrowed}</div>
-                         </div>
+                         <div className="w-4/5 bg-gray-800 p-3 rounded text-center border-l-4 border-emerald-500"><div className="text-xs text-gray-400 uppercase tracking-widest mb-1">Clean / Escrowed</div><div className="font-bold text-emerald-400 text-xl">{funnel.escrowed}</div></div>
                          <div className="text-gray-600 text-xs">↓</div>
                          <div className="w-full flex gap-3">
-                             <div className="flex-1 bg-gray-800 p-2 rounded text-center border-l-4 border-purple-500 shadow-sm">
-                                 <div className="text-[10px] text-gray-400 uppercase mb-1">DeFi Financed</div>
-                                 <div className="font-bold text-purple-400 text-lg">{funnel.financed}</div>
-                             </div>
-                             <div className="flex-1 bg-gray-800 p-2 rounded text-center border-l-4 border-orange-500 shadow-sm">
-                                 <div className="text-[10px] text-gray-400 uppercase mb-1">Disputed</div>
-                                 <div className="font-bold text-orange-400 text-lg">{funnel.disputed}</div>
-                             </div>
+                             <div className="flex-1 bg-gray-800 p-2 rounded text-center border-l-4 border-purple-500"><div className="text-[10px] text-gray-400 uppercase mb-1">DeFi Financed</div><div className="font-bold text-purple-400 text-lg">{funnel.financed}</div></div>
+                             <div className="flex-1 bg-gray-800 p-2 rounded text-center border-l-4 border-orange-500"><div className="text-[10px] text-gray-400 uppercase mb-1">Disputed</div><div className="font-bold text-orange-400 text-lg">{funnel.disputed}</div></div>
                          </div>
                      </div>
                  </div>
