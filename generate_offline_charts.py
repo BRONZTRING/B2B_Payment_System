@@ -1,6 +1,8 @@
 # ==============================================================================
-# B2B 跨国支付网络：高并发架构与 AI 流式异常检测 (毕业论文专用绘图脚本 - 终极完整版)
-# 包含：全部 14 张原始分析图 + 3 张新增高并发架构图 (全量俄英双语 GOST 标准)
+# B2B 跨国支付网络：高并发架构与 AI 流式异常检测 (毕业论文专用绘图脚本 - 完整版)
+# 包含：全部 17 张原始分析图 + 3 张真实模型评估图（可选，需 risk_model.pkl）
+# 当前版本基于规则引擎 + 模拟噪声生成风险评分，用于验证数据管线与系统连通性。
+# 若根目录存在 risk_model.pkl（由 train_model.py 生成），则自动追加真实模型图表。
 # ==============================================================================
 import sqlite3
 import pandas as pd
@@ -47,21 +49,22 @@ except Exception as e:
 # 🧠 核心逻辑：提取上帝视角与注入“真实缺陷噪音”
 # ==========================================
 def extract_ground_truth(order_id):
-    if "DIRTY" in str(order_id): return 1 # 真实洗钱
-    return 0                              # 真实合法
+    # 管线验证用：使用订单ID中的规则标记生成标签，非外部真实数据
+    if "DIRTY" in str(order_id): return 1
+    return 0
 
 df['ground_truth'] = df['id'].apply(extract_ground_truth)
 
-# ⚠️ 答辩防杠核心：注入高斯噪音，使模型准确率逼近真实的 85%-92%，防止伪造感
+# 以下风险评分由规则引擎+模拟噪声合成，用于验证端到端数据流。
+# 真实机器学习模型接入后，替换此段为模型输出即可。
 np.random.seed(42)
 noise = np.random.normal(0, 0.18, len(df))
-# 模拟孤立森林输出的风险分
 df['risk_score'] = np.clip(df['ground_truth'] * 0.55 + 0.25 + noise, 0, 1)
 
 # 使用 0.80 阈值进行硬性拦截 (模拟 Go 内存启发式规则)
 df['is_flagged_int'] = (df['risk_score'] > 0.80).astype(int)
 
-# 模拟真实的系统并发网络延迟 (均值 12ms 左右)
+# 模拟系统延迟，非实测数据。实测延迟需通过压测工具获取。
 df['latency_ms'] = np.random.lognormal(mean=np.log(12), sigma=0.4, size=len(df))
 
 # ==========================================
@@ -318,4 +321,49 @@ plt.tight_layout()
 plt.savefig(f"{EXPORT_DIR}/17_attack_wave_stackplot.png", dpi=300)
 plt.close()
 
-print("✅ 大功告成！全量 17 张硬核学术图表已全部导出至 thesis_exports/ 目录！")
+# ======================== 真实模型评估图（可选，需 risk_model.pkl） ========================
+MODEL_PATH = "risk_model.pkl"
+if os.path.exists(MODEL_PATH):
+    print("🎨 检测到真实模型，追加真实模型评估图表...")
+    import joblib
+    model = joblib.load(MODEL_PATH)
+    # 根据实际特征调整预测数据，这里仅用金额列作为示例
+    test_feats = df[['amount']].values
+    y_scores = model.decision_function(test_feats)
+    y_pred = model.predict(test_feats)
+    y_pred_bin = (y_pred == -1).astype(int)
+    y_true = df['ground_truth'].values
+
+    # 图18：真实ROC曲线
+    fpr, tpr, _ = roc_curve(y_true, y_scores)
+    roc_auc = auc(fpr, tpr)
+    plt.figure(figsize=(8,6))
+    plt.plot(fpr, tpr, label=f'Real Model ROC (AUC = {roc_auc:.3f})')
+    plt.plot([0,1],[0,1],'k--')
+    plt.legend()
+    plt.grid(alpha=0.3)
+    plt.title('Рис 18. ROC-кривая (Реальная модель Isolation Forest)')
+    plt.savefig(f"{EXPORT_DIR}/18_roc_real.png", dpi=300)
+    plt.close()
+
+    # 图19：真实混淆矩阵
+    cm_real = confusion_matrix(y_true, y_pred_bin)
+    plt.figure(figsize=(7,5))
+    sns.heatmap(cm_real, annot=True, fmt='d', cmap='Blues',
+                xticklabels=['Pred Clean', 'Pred Dirty'], yticklabels=['True Clean', 'True Dirty'])
+    plt.title('Рис 19. Матрица ошибок (Реальная модель)')
+    plt.savefig(f"{EXPORT_DIR}/19_confusion_matrix_real.png", dpi=300)
+    plt.close()
+
+    # 图20：特征重要性（标准差近似）
+    imp = np.std(test_feats, axis=0)
+    plt.figure(figsize=(10,6))
+    plt.barh(['Amount'], imp, color='navy')
+    plt.title('Рис 20. Важность признаков (Реальная модель)')
+    plt.savefig(f"{EXPORT_DIR}/20_feature_importance_real.png", dpi=300)
+    plt.close()
+    print("✅ 真实模型图表已追加（图18-20）。")
+else:
+    print("ℹ️ 未找到 risk_model.pkl，仅生成本地 17 张管线验证图。")
+
+print("✅ 大功告成！全量学术图表已全部导出至 thesis_exports/ 目录！")

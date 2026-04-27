@@ -3,25 +3,50 @@ package controllers
 import (
 	"b2b_backend/initializers"
 	"b2b_backend/models"
-	"math/rand"
 	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 )
 
-func calculateRiskScore(amount float64, destination string) float64 {
-	baseScore := rand.Float64() * 0.4
-	if strings.Contains(destination, "Sanctioned") || strings.Contains(destination, "Dark Web") || strings.Contains(destination, "High Risk") {
-		baseScore += 0.55
-	}
+func calculateRiskScore(amount float64, destination string, payerType string) (float64, []string) {
+	var score float64 = 0
+	var reasons []string
+
 	if amount > 200000 {
-		baseScore += 0.35
+		score += 0.35
+		reasons = append(reasons, "超大额交易")
+	} else if amount > 100000 {
+		score += 0.15
+		reasons = append(reasons, "大额交易")
 	}
-	if baseScore > 0.99 {
-		return 0.99
+
+	highRiskKeywords := []string{"Sanctioned", "High Risk", "Dark Web", "Illegal"}
+	for _, kw := range highRiskKeywords {
+		if strings.Contains(strings.ToLower(destination), strings.ToLower(kw)) {
+			score += 0.55
+			reasons = append(reasons, "高风险收款方")
+			break
+		}
 	}
-	return baseScore
+
+	if payerType == "new" || payerType == "unverified" {
+		score += 0.25
+		reasons = append(reasons, "付款方未验证/新注册")
+	}
+	if amount < 10 && payerType == "new" {
+		score += 0.15
+		reasons = append(reasons, "小额测试交易")
+	}
+
+	if score > 1.0 {
+		score = 1.0
+	}
+	if len(reasons) == 0 {
+		reasons = append(reasons, "低风险交易")
+	}
+
+	return score, reasons
 }
 
 func CreateOrder(c *gin.Context) {
@@ -43,8 +68,9 @@ func CreateOrder(c *gin.Context) {
 		return
 	}
 
-	riskScore := calculateRiskScore(body.Amount, body.Destination)
+	riskScore, riskReasons := calculateRiskScore(body.Amount, body.Destination, "normal")
 	isFlagged := riskScore >= 0.80
+	_ = riskReasons // 若数据库暂无字段存储原因，可暂存日志或忽略
 
 	status := "PAID"
 	if body.PaymentType == "DIRECT" {
