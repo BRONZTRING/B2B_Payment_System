@@ -1,4 +1,4 @@
-告诉 GitHub 忽略第三方库的语言统计
+# # 告诉 GitHub 忽略第三方库的语言统计
 
 lib/** linguist-vendored
 contracts/lib/** linguist-vendored

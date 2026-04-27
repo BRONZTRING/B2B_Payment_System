@@ -56,3 +56,15 @@ infrastructure/postgres_data/
 Thumbs.db
 .vscode/
 .idea/
+# 运行时与压测产生的大型/临时文件
+*.pid
+*.log
+backend/b2b_ledger.db
+risk_model.pkl
+charts/
+# 运行时与压测产生的大型/临时文件
+*.pid
+*.log
+backend/b2b_ledger.db
+risk_model.pkl
+charts/

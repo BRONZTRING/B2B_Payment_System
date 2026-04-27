@@ -3,50 +3,54 @@ package controllers
 import (
 	"b2b_backend/initializers"
 	"b2b_backend/models"
+	"bytes"
+	"encoding/json"
+	"fmt"
 	"net/http"
-	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
-func calculateRiskScore(amount float64, destination string, payerType string) (float64, []string) {
-	var score float64 = 0
-	var reasons []string
+type AIRiskRequest struct {
+	Amount      float64 `json:"amount"`
+	Destination string  `json:"destination"`
+	PayerType   string  `json:"payer_type"`
+}
 
-	if amount > 200000 {
-		score += 0.35
-		reasons = append(reasons, "超大额交易")
-	} else if amount > 100000 {
-		score += 0.15
-		reasons = append(reasons, "大额交易")
-	}
+type AIRiskResponse struct {
+	RiskScore float64  `json:"risk_score"`
+	IsFlagged bool     `json:"is_flagged"`
+	Reasons   []string `json:"reasons"`
+}
 
-	highRiskKeywords := []string{"Sanctioned", "High Risk", "Dark Web", "Illegal"}
-	for _, kw := range highRiskKeywords {
-		if strings.Contains(strings.ToLower(destination), strings.ToLower(kw)) {
-			score += 0.55
-			reasons = append(reasons, "高风险收款方")
-			break
-		}
+func getRealAIRisk(amount float64, destination string, payerType string) (float64, bool, []string) {
+	reqBody := AIRiskRequest{
+		Amount:      amount,
+		Destination: destination,
+		PayerType:   payerType,
 	}
+	jsonData, _ := json.Marshal(reqBody)
 
-	if payerType == "new" || payerType == "unverified" {
-		score += 0.25
-		reasons = append(reasons, "付款方未验证/新注册")
-	}
-	if amount < 10 && payerType == "new" {
-		score += 0.15
-		reasons = append(reasons, "小额测试交易")
-	}
+	client := http.Client{Timeout: 3 * time.Second}
+	resp, err := client.Post("http://127.0.0.1:5005/api/v1/analyze_risk", "application/json", bytes.NewBuffer(jsonData))
 
-	if score > 1.0 {
-		score = 1.0
+	if err != nil {
+		fmt.Printf("[! 熔断警告] 无法连接 AI 预言机: %v\n", err)
+		return 0.05, false, []string{"AI 节点离线，系统降级放行"}
 	}
-	if len(reasons) == 0 {
-		reasons = append(reasons, "低风险交易")
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return 0.05, false, []string{"AI 节点响应异常，降级放行"}
 	}
 
-	return score, reasons
+	var aiResp AIRiskResponse
+	if err := json.NewDecoder(resp.Body).Decode(&aiResp); err != nil {
+		return 0.05, false, []string{"AI 节点数据解析失败，降级放行"}
+	}
+
+	return aiResp.RiskScore, aiResp.IsFlagged, aiResp.Reasons
 }
 
 func CreateOrder(c *gin.Context) {
@@ -68,9 +72,10 @@ func CreateOrder(c *gin.Context) {
 		return
 	}
 
-	riskScore, riskReasons := calculateRiskScore(body.Amount, body.Destination, "normal")
-	isFlagged := riskScore >= 0.80
-	_ = riskReasons // 若数据库暂无字段存储原因，可暂存日志或忽略
+	riskScore, isFlagged, riskReasons := getRealAIRisk(body.Amount, body.Destination, "normal")
+
+	// [修复BUG] 在此处消费 riskReasons 变量，将其打印为审计日志，不仅消除了编译错误，还能为论文提供真实的运行截图
+	fmt.Printf("[AI 审计] 订单 %s | 金额: %.2f | Score: %.3f | 拦截: %v | 理由: %v\n", body.ID, body.Amount, riskScore, isFlagged, riskReasons)
 
 	status := "PAID"
 	if body.PaymentType == "DIRECT" {
@@ -109,16 +114,13 @@ func GetOrders(c *gin.Context) {
 	var orders []models.Order
 	var totalCount int64
 
-	// 🌟 终极改造：精准统计底座真实的物理数据量
 	initializers.DB.Model(&models.Order{}).Count(&totalCount)
-
-	// UI 依然只拉取最新 1000 条，保护浏览器内存
 	initializers.DB.Order("created_at desc").Limit(1000).Find(&orders)
 
 	c.JSON(http.StatusOK, gin.H{
 		"success":     true,
 		"data":        orders,
-		"total_count": totalCount, // 暴露给前端算 TPS
+		"total_count": totalCount,
 	})
 }
 
@@ -143,10 +145,21 @@ func UpdateOrderStatus(c *gin.Context) {
 func FinanceOrder(c *gin.Context) {
 	id := c.Param("id")
 	var order models.Order
+
 	if err := initializers.DB.Where("id = ?", id).First(&order).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Order not found"})
 		return
 	}
+
+	if order.Status != "SHIPPED" {
+		c.JSON(http.StatusForbidden, gin.H{"error": "Strict Mode: Order must be SHIPPED before financing."})
+		return
+	}
+	if order.IsFinanced {
+		c.JSON(http.StatusConflict, gin.H{"error": "Strict Mode: Order has already been financed."})
+		return
+	}
+
 	initializers.DB.Model(&order).Update("is_financed", true)
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "DeFi Financing Approved"})
 }

@@ -1,35 +1,35 @@
 #!/bin/bash
 
-echo "🛑 正在切断 B2B 仿真系统所有服务的电源..."
+echo "🛑 开始安全关停 B2B 支付系统..."
 
-# 读取 PID 并杀死进程
-if [ -f .anvil.pid ]; then
-    kill $(cat .anvil.pid) 2>/dev/null
-    echo "✔️  已关闭 Anvil 节点"
-    rm .anvil.pid
-fi
-
+# 1. 停止 AI 微服务
 if [ -f .ai.pid ]; then
-    kill $(cat .ai.pid) 2>/dev/null
-    echo "✔️  已关闭 AI 雷达"
+    PID=$(cat .ai.pid)
+    kill $PID 2>/dev/null
     rm .ai.pid
+    echo "🧠 停止 AI 微服务 (PID: $PID)"
+else
+    echo "⚠️ 未找到 AI 微服务 PID 记录"
 fi
 
+# 2. 停止 Go 后端
 if [ -f .backend.pid ]; then
-    kill $(cat .backend.pid) 2>/dev/null
-    echo "✔️  已关闭 Go 后端"
+    PID=$(cat .backend.pid)
+    kill $PID 2>/dev/null
     rm .backend.pid
+    echo "⚙️ 停止 Go 后端 (PID: $PID)"
+else
+    echo "⚠️ 未找到 Go 后端 PID 记录"
 fi
 
+# 3. 停止前端
 if [ -f .frontend.pid ]; then
-    # 由于 npm run dev 往往会衍生子进程，保险起见直接杀 node 进程
-    kill $(cat .frontend.pid) 2>/dev/null
-    pkill -f "next-server" 2>/dev/null
-    pkill -f "next" 2>/dev/null
-    echo "✔️  已关闭 Next.js 前端"
+    PID=$(cat .frontend.pid)
+    kill $PID 2>/dev/null
     rm .frontend.pid
+    echo "🌐 停止前端服务 (PID: $PID)"
+else
+    echo "⚠️ 未找到前端 PID 记录"
 fi
 
-echo "=========================================================="
-echo "✅ 所有系统进程已安全终止！"
-echo "=========================================================="
+echo "✅ 所有系统组件已安全下线。"
